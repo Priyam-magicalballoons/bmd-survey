@@ -1,26 +1,255 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Updated to pharma-themed blue/white color scheme */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #4b5563;
+  --card: #f9fafb;
+  --card-foreground: #4b5563;
+  --popover: #ffffff;
+  --popover-foreground: #4b5563;
+  /* --primary: #0891b2; */
+  --primary-foreground: #ffffff;
+  --secondary: #10b981;
+  --secondary-foreground: #ffffff;
+  --muted: #f9fafb;
+  --muted-foreground: #6b7280;
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  /* --input: #ffffff; */
+  --ring: #0891b2;
+  --chart-1: #60a5fa;
+  --chart-2: #3b82f6;
+  --chart-3: #2563eb;
+  --chart-4: #1d4ed8;
+  --chart-5: #1e40af;
+  --radius: 0.375rem;
+  --sidebar: #f9fafb;
+  --sidebar-foreground: #4b5563;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #4b5563;
+  --sidebar-accent: #10b981;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #0891b2;
+}
+/* Hide scrollbar for Chrome, Safari and Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+  -ms-overflow-style: none;
+  /* IE and old Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.dark {
+  --background: #1f2937;
+  --foreground: #f9fafb;
+  --card: #374151;
+  --card-foreground: #f9fafb;
+  --popover: #374151;
+  --popover-foreground: #f9fafb;
+  --primary: #0891b2;
+  --primary-foreground: #ffffff;
+  --secondary: #10b981;
+  --secondary-foreground: #ffffff;
+  --muted: #4b5563;
+  --muted-foreground: #9ca3af;
+  --accent: #10b981;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #4b5563;
+  --input: #374151;
+  --ring: #0891b2;
+  --chart-1: #60a5fa;
+  --chart-2: #3b82f6;
+  --chart-3: #2563eb;
+  --chart-4: #1d4ed8;
+  --chart-5: #1e40af;
+  --sidebar: #374151;
+  --sidebar-foreground: #f9fafb;
+  --sidebar-primary: #0891b2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #10b981;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #4b5563;
+  --sidebar-ring: #0891b2;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+/* Base toast style */
+.toast {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 24rem;
+  /* same as max-w-sm */
+  align-items: center;
+  gap: 0.5rem;
+  /* same as gap-2 */
+  overflow: hidden;
+  border-radius: 0.375rem;
+  /* same as rounded-md */
+  border-width: 1px;
+  padding: 1rem 1.5rem 1rem 1rem;
+  /* same as p-4 pr-6 */
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* same as shadow-lg */
+  transition: all 0.2s ease-in-out;
+  /* same as transition-all */
+}
+
+.toast-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.dark .toast-success {
+  background-color: rgba(20, 83, 45, 0.3);
+  /* dark green bg */
+  color: #bbf7d0;
+  /* green-200 */
+  border-color: #14532d;
+  /* green-800 */
+}
+
+/* Error */
+.toast-error {
+  background-color: #fef2f2;
+  /* red-50 */
+  color: #991b1b;
+  /* red-800 */
+  border-color: #fecaca;
+  /* red-200 */
+}
+
+.dark .toast-error {
+  background-color: rgba(153, 27, 27, 0.3);
+  /* dark red bg */
+  color: #fecaca;
+  /* red-200 */
+  border-color: #7f1d1d;
+  /* red-800 */
+}
+
+/* Destructive */
+.toast-destructive {
+  background-color: #fff1f2;
+  /* rose-50 */
+  color: #9f1239;
+  /* rose-800 */
+  border-color: #fecdd3;
+  /* rose-200 */
+}
+
+.dark .toast-destructive {
+  background-color: rgba(159, 18, 57, 0.3);
+  /* dark rose bg */
+  color: #fecdd3;
+  /* rose-200 */
+  border-color: #881337;
+  /* rose-800 */
+}
+
+/* Info */
+.toast-info {
+  background-color: #eff6ff;
+  /* blue-50 */
+  color: #1e40af;
+  /* blue-800 */
+  border-color: #bfdbfe;
+  /* blue-200 */
+}
+
+.dark .toast-info {
+  background-color: rgba(30, 64, 175, 0.3);
+  /* dark blue bg */
+  color: #bfdbfe;
+  /* blue-200 */
+  border-color: #1e3a8a;
+  /* blue-800 */
+}
+
+/* Default */
+.toast-default {
+  background-color: #ffffff;
+  /* white */
+  color: #171717;
+  /* neutral-900 */
+  border-color: #e5e5e5;
+  /* neutral-200 */
+}
+
+.dark .toast-default {
+  background-color: #171717;
+  /* neutral-900 */
+  color: #f5f5f5;
+  /* neutral-100 */
+  border-color: #262626;
+  /* neutral-800 */
 }

@@ -1,0 +1,74 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Coordinator {
+  id        String    @id @default(uuid())
+  campId    String    @unique
+  patients  Patient[]
+  doctor    Doctor?
+  createdAt DateTime  @default(now())
+}
+
+model Doctor {
+  id                 String      @id @default(uuid())
+  name               String
+  mslCode            String
+  number             String
+  registrationNumber String
+  coordinatorId      String      @unique
+  coordinator        Coordinator @relation(fields: [coordinatorId], references: [id])
+  createdAt          DateTime    @default(now())
+}
+
+model Patient {
+  id            String        @id @default(uuid())
+  name          String?
+  age           String
+  gender        String
+  number        String
+  coordinatorId String
+  coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: NoAction)
+  questionaire  Questionaire?
+  createdAt     DateTime      @default(now())
+}
+
+model Questionaire {
+  id                          String   @id @default(uuid())
+  patientId                   String   @unique
+  patient                     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  bmdScore                    String
+  Menopause                   String?
+  weight                      String
+  height                      String
+  copd                        String
+  copdMedication              String?
+  kneeOsteoarthritis          String
+  diabetes                    String
+  epilepsy                    String
+  epilepsyMedication          String?
+  hypertension                String
+  diet                        String
+  smoking                     String
+  tobacco                     String
+  alcohol                     String
+  historyOfFractures          String
+  fractureAge                 String?
+  orthopaedicSurgeriesHistory String
+  createdAt                   DateTime @default(now())
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  otp       String
+  phone     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([otp, phone])
+}
