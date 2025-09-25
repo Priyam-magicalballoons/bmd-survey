@@ -1,5 +1,3 @@
-"use server";
-
 import { Redis } from "@upstash/redis";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
@@ -27,7 +25,7 @@ async function startWorker() {
 
   while (true) {
     try {
-      const rawRes = await redis.xread([STREAM_KEY], [lastId], { count: 1 });
+      const rawRes = await redis.xread([STREAM_KEY], [lastId], { count: 5 });
 
       if (!rawRes) {
         await new Promise((r) => setTimeout(r, 5000));

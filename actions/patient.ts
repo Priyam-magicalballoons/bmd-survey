@@ -1,64 +1,110 @@
 "use server";
 
+import { withRetry } from "@/lib/helpers";
 import { prisma } from "@/prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export const savePatient = async (data: any) => {
-  console.log("data", data);
+interface PatientData {
+  name?: string | undefined;
+  age: string;
+  gender: string;
+  mobile?: string | undefined;
+  height: string;
+  weight: string;
+  diet: string;
+  alcohol: string;
+  smoking: string;
+  tobacco_chewing: string;
+  bmd_score: string;
+  history_of_fractures: string;
+  fracture_diagnosed: string;
+  menopause: string;
+  orthopaedic_surgeries: string;
+  existing_medical_conditions: {
+    copd: string;
+    diabetes: string;
+    epilepsy: string;
+    hypertension: string;
+    knee_osteoarthritis: string;
+    copd_regular_medicine?: string;
+    epilepsy_regular_medicine?: string;
+  };
+}
+// Retry helper
 
-  const token = (await cookies()).get("user")?.value;
-  if (!token) {
-    return {
-      status: 400,
-      message: "Internal server error",
-    };
-  }
+export const savePatient = async (data: PatientData) => {
+  try {
+    const token = (await cookies()).get("user")?.value;
+    if (!token) {
+      return { status: 401, message: "Unauthorized: token missing" };
+    }
 
-  const coordinatorId = jwt.decode(token) as { id: string; campId: string };
+    let coordinator: { id: string; campId: string };
+    try {
+      coordinator = jwt.verify(token, process.env.JWT_SECRET!) as {
+        id: string;
+        campId: string;
+      };
+    } catch {
+      return { status: 401, message: "Invalid token" };
+    }
 
-  const createPatient = await prisma.patient.create({
-    data: {
-      age: data.age,
-      gender: data.gender,
-      number: data.mobile,
-      coordinatorId: coordinatorId.id,
-      name: data.name,
-    },
-  });
+    const result = await withRetry(async () =>
+      prisma.$transaction(async (prisma) => {
+        const patient = await prisma.patient.create({
+          data: {
+            name: data.name,
+            age: data.age,
+            gender: data.gender,
+            number: data.mobile!,
+            coordinatorId: coordinator.id,
+          },
+        });
 
-  const createdata = await prisma.questionaire.create({
-    data: {
-      alcohol: data.alcohol,
-      bmdScore: data.bmd_score,
-      copd: data.existing_medical_conditions.copd,
-      diabetes: data.existing_medical_conditions.diabetes,
-      diet: data.diet,
-      epilepsy: data.existing_medical_conditions.epilepsy,
-      height: data.height,
-      historyOfFractures: data.history_of_fractures,
-      hypertension: data.existing_medical_conditions.hypertension,
-      kneeOsteoarthritis: data.existing_medical_conditions.knee_osteoarthritis,
-      orthopaedicSurgeriesHistory: data.orthopaedic_surgeries,
-      smoking: data.smoking,
-      tobacco: data.tobacco_chewing,
-      weight: data.weight,
-      copdMedication: data.existing_medical_conditions.copd_regular_medicine,
-      epilepsyMedication:
-        data.existing_medical_conditions.epilepsy_regular_medicine,
-      fractureAge: data.fracture_diagnosed,
-      Menopause: data.menopause,
-      patientId: createPatient.id,
-    },
-  });
+        const questionnaire = await prisma.questionaire.create({
+          data: {
+            alcohol: data.alcohol,
+            bmdScore: data.bmd_score,
+            copd: data.existing_medical_conditions.copd,
+            diabetes: data.existing_medical_conditions.diabetes,
+            diet: data.diet,
+            epilepsy: data.existing_medical_conditions.epilepsy,
+            height: data.height,
+            historyOfFractures: data.history_of_fractures,
+            hypertension: data.existing_medical_conditions.hypertension,
+            kneeOsteoarthritis:
+              data.existing_medical_conditions.knee_osteoarthritis,
+            orthopaedicSurgeriesHistory: data.orthopaedic_surgeries,
+            smoking: data.smoking,
+            tobacco: data.tobacco_chewing,
+            weight: data.weight,
+            copdMedication:
+              data.existing_medical_conditions.copd_regular_medicine,
+            epilepsyMedication:
+              data.existing_medical_conditions.epilepsy_regular_medicine,
+            fractureAge: data.fracture_diagnosed,
+            Menopause: data.menopause,
+            patientId: patient.id,
+          },
+        });
 
-  if (createdata && createPatient) {
+        return { patient, questionnaire };
+      })
+    );
+
     return {
       status: 200,
-      message: "Patient recorded successfully",
+      message: "Patient and questionnaire saved successfully",
+      data: result,
     };
-  } else {
-    throw new Error("Error in saving data");
+  } catch (error: any) {
+    console.error("Error saving patient:", error);
+    return {
+      status: 500,
+      message: "Internal server error",
+      error: error.message,
+    };
   }
 };
 

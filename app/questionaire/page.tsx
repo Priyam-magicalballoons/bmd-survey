@@ -252,14 +252,16 @@ const page = () => {
     }
 
     // const savePatientData = await savePatient(sessionData, questions);
-    const campData = await getCampData();
-    const savePatientData = await producePatientEvent(
-      {
-        ...sessionData,
-        ...questions,
-      },
-      campData.id
-    );
+    // const campData = await getCampData();
+    // const savePatientData = await producePatientEvent(
+    //   {
+    //     ...sessionData,
+    //     ...questions,
+    //   },
+    //   campData.id
+    // );
+
+    const savePatientData = await savePatient({ ...sessionData, ...questions });
 
     if (!savePatientData || savePatientData?.status === 400) {
       toast(savePatientData?.message, {

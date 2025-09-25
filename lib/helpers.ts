@@ -65,3 +65,23 @@ export const getTempData = async () => {
     };
   }
 };
+
+export const withRetry = async <T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delayMs = 3000
+): Promise<T> => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (err: any) {
+      if (attempt === retries) throw err;
+      console.warn(
+        `Retry ${attempt} failed. Retrying in ${delayMs}ms...`,
+        err.message
+      );
+      await new Promise((res) => setTimeout(res, delayMs));
+    }
+  }
+  throw new Error("Unexpected retry error");
+};
