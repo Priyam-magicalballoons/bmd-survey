@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && prisma generate && ts-node lib/worker.ts",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "start:worker": "node dist/worker.js"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
@@ -40,6 +44,7 @@
     "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "prisma": "^6.16.2",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",

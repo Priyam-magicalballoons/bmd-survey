@@ -2,12 +2,7 @@
 
 import { Redis } from "@upstash/redis";
 import "dotenv/config";
-// import { savePatientToDB } from "./db/patient";
-// import { cookies } from "next/headers";
-// import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
-// import { savePatient } from "@/actions/patient";
-import cookie from "cookie";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
