@@ -69,7 +69,7 @@ const page = () => {
     orthopaedic_surgeries: "",
   });
 
-  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [currentQuestion, setCurrentQuestion] = useState(4);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -315,7 +315,7 @@ const page = () => {
   return (
     <div className="flex min-h-screen max-h-screen justify-center overflow-y-scroll py-20 w-full">
       <div className="rounded-tl-2xl rounded-tr-2xl h-fit w-80 bg-white shadow-[0px_10px_2px_1px_rgba(0,_0,_0,_0.1)] pb-10">
-        <div className="bg-[#143975] h-18 rounded-tl-2xl rounded-tr-2xl text-white items-center flex justify-center text-2xl">
+        <div className="bg-[#143975] h-18 rounded-tl-2xl rounded-tr-2xl text-white items-center flex justify-center text-2xl font-arial">
           SURVEY
         </div>
         <div>
@@ -324,7 +324,10 @@ const page = () => {
               {currentQuestion === 1 && (
                 <>
                   <div className="w-full flex  flex-col px-10">
-                    <Label htmlFor="age" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="age"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       AGE
                     </Label>
                     <Input
@@ -352,7 +355,10 @@ const page = () => {
                     />
                   </div>
                   <div className="w-full flex flex-col px-10 ">
-                    <Label htmlFor="gender" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="gender"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       GENDER :
                     </Label>
                     <RadioGroup
@@ -375,7 +381,7 @@ const page = () => {
                         />
                         <Label
                           htmlFor="male"
-                          className={`text-md border-2 border-[#143975] py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] hover:text-white ${
+                          className={`text-md border-2 border-[#143975] py-1 rounded-tr-xl rounded-bl-xl w-20 text-center font-arial flex justify-center hover:bg-[#143875] hover:text-white ${
                             questions.gender === "male"
                               ? "text-white bg-[#143875]"
                               : "border-[#143975] bg-white"
@@ -392,7 +398,7 @@ const page = () => {
                         />
                         <Label
                           htmlFor="female"
-                          className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] hover:text-white ${
+                          className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] font-arial hover:text-white ${
                             questions.gender === "female"
                               ? "text-white bg-[#143875]"
                               : "border-[#143975] bg-white"
@@ -409,7 +415,7 @@ const page = () => {
                         />
                         <Label
                           htmlFor="other"
-                          className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] hover:text-white ${
+                          className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center font-arial flex justify-center hover:bg-[#143875] hover:text-white ${
                             questions.gender === "other"
                               ? "text-white bg-[#143875]"
                               : "border-[#143975] bg-white"
@@ -421,7 +427,10 @@ const page = () => {
                     </RadioGroup>
                   </div>
                   <div className=" w-full flex  flex-col px-10">
-                    <Label htmlFor="height" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="height"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       HEIGHT (in CM)
                     </Label>
                     <Input
@@ -446,7 +455,10 @@ const page = () => {
                     />
                   </div>
                   <div className=" w-full flex  flex-col px-10">
-                    <Label htmlFor="weight" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="weight"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       WEIGHT (in KG)
                     </Label>
                     <Input
@@ -475,7 +487,10 @@ const page = () => {
                 <>
                   {questions.gender === "female" && (
                     <div className="w-full flex flex-col px-10 ">
-                      <Label htmlFor="menopause" className="py-2 text-xl pl-2">
+                      <Label
+                        htmlFor="menopause"
+                        className="py-2 text-xl pl-2 font-arial"
+                      >
                         HAVE YOU ATTAINED MENOPAUSE :
                       </Label>
                       <RadioGroup
@@ -497,7 +512,7 @@ const page = () => {
                           />
                           <Label
                             htmlFor="yes"
-                            className={`text-md border-2 border-[#143975] py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] hover:text-white ${
+                            className={`text-md border-2 border-[#143975] py-1 rounded-tr-xl rounded-bl-xl w-20 text-center font-arial flex justify-center hover:bg-[#143875] hover:text-white ${
                               questions.menopause === "yes"
                                 ? "text-white bg-[#143875]"
                                 : "border-[#143975] bg-white"
@@ -514,7 +529,7 @@ const page = () => {
                           />
                           <Label
                             htmlFor="no"
-                            className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center hover:bg-[#143875] hover:text-white ${
+                            className={`text-md border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center font-arial flex justify-center hover:bg-[#143875] hover:text-white ${
                               questions.menopause === "no"
                                 ? "text-white bg-[#143875]"
                                 : "border-[#143975] bg-white"
@@ -527,7 +542,10 @@ const page = () => {
                     </div>
                   )}
                   <div className=" w-full flex  flex-col px-10">
-                    <Label htmlFor="bmd-score" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="bmd-score"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       BMD T-SCORE
                     </Label>
                     <Input
@@ -554,11 +572,14 @@ const page = () => {
               )}
               {currentQuestion === 3 && (
                 <>
-                  <p className="uppercase text-center font-semibold text-lg px-2">
+                  <p className="uppercase font-semibold text-lg text-md tracking-tighter font-arial px-2 w-full">
                     Q. Existing medical conditions
                   </p>
                   <div className="w-full flex flex-col px-10 -ml-7">
-                    <Label htmlFor="gender" className="py-2 text-xl pl-2">
+                    <Label
+                      htmlFor="gender"
+                      className="py-2 text-xl pl-2 font-arial"
+                    >
                       i. COPD / Asthama
                     </Label>
                     <RadioGroup
@@ -579,12 +600,12 @@ const page = () => {
                         <RadioGroupItem
                           value="yes"
                           id="copdyes"
-                          className="border-none [&>span]:hidden"
+                          className="border-none [&>span]:hidden "
                           color="white"
                         />
                         <Label
                           htmlFor="copdyes"
-                          className={`text-lg border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center checked:bg-red-500 hover:bg-[#143875] hover:text-white ${
+                          className={`text-lg border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center font-arial checked:bg-red-500 hover:bg-[#143875] hover:text-white ${
                             questions.existing_medical_conditions.copd === "yes"
                               ? "text-white bg-[#143875]"
                               : "border-[#143975] bg-white"
@@ -601,7 +622,7 @@ const page = () => {
                         />
                         <Label
                           htmlFor="copdno"
-                          className={`text-lg border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center checked:bg-red-500 hover:bg-[#143875] hover:text-white ${
+                          className={`text-lg border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-20 text-center flex justify-center font-arial checked:bg-red-500 hover:bg-[#143875] hover:text-white ${
                             questions.existing_medical_conditions.copd === "no"
                               ? "text-white bg-[#143875]"
                               : "border-[#143975] bg-white"
@@ -640,7 +661,7 @@ const page = () => {
                             />
                             <Label
                               htmlFor="copdmedyes"
-                              className={` border-2 border-[#143975] px-2 py-3 rounded-tr-xl rounded-bl-xl w-32 justify-center hover:bg-[#143875] hover:text-white uppercase ${
+                              className={` border-2 border-[#143975] px-2 py-3 rounded-tr-xl rounded-bl-xl w-32 justify-center font-arial hover:bg-[#143875] hover:text-white uppercase ${
                                 questions.existing_medical_conditions
                                   .copd_regular_medicine === "yes"
                                   ? "text-white bg-[#143875]"
@@ -658,7 +679,7 @@ const page = () => {
                             />
                             <Label
                               htmlFor="copdmedno"
-                              className={` border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-32 justify-center hover:bg-[#143875] hover:text-white uppercase ${
+                              className={` border-2 border-[#143975] px-2 py-1 rounded-tr-xl rounded-bl-xl w-32 justify-center font-arial hover:bg-[#143875] hover:text-white uppercase ${
                                 questions.existing_medical_conditions
                                   .copd_regular_medicine === "no"
                                   ? "text-white bg-[#143875]"
@@ -672,8 +693,8 @@ const page = () => {
                       </div>
                     )}
 
-                  <div className="w-full flex flex-col px-10 -ml-7">
-                    <Label htmlFor="knee" className="py-2 text-xl pl-2">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
+                    <Label htmlFor="knee" className="py-2 text-xl pl-2 ">
                       ii. Knee Osteoarthritis :
                     </Label>
                     <RadioGroup
@@ -732,7 +753,7 @@ const page = () => {
                     </RadioGroup>
                   </div>
 
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label htmlFor="Diabetes" className="py-2 text-xl pl-2">
                       iii. Diabetes :
                     </Label>
@@ -792,7 +813,7 @@ const page = () => {
                     </RadioGroup>
                   </div>
 
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label htmlFor="Epilepsy" className="py-2 text-xl pl-2">
                       iv. Epilepsy:
                     </Label>
@@ -850,7 +871,7 @@ const page = () => {
                     </RadioGroup>
                   </div>
                   {questions.existing_medical_conditions.epilepsy === "yes" && (
-                    <div className="w-full flex flex-col px-10 -ml-7">
+                    <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                       <RadioGroup
                         defaultValue={
                           questions.existing_medical_conditions
@@ -908,7 +929,7 @@ const page = () => {
                     </div>
                   )}
 
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label
                       htmlFor="Hypertension"
                       className="py-2 text-xl pl-2 "
@@ -973,7 +994,7 @@ const page = () => {
               )}
               {currentQuestion === 4 && (
                 <>
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label htmlFor="Diet" className="py-2 text-xl pl-2">
                       DIET :
                     </Label>
@@ -1041,7 +1062,7 @@ const page = () => {
                       </div>
                     </RadioGroup>
                   </div>
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label htmlFor="Smoking" className="py-2 text-xl pl-2">
                       SMOKING :
                     </Label>
@@ -1092,7 +1113,7 @@ const page = () => {
                       </div>
                     </RadioGroup>
                   </div>
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label
                       htmlFor="Tobacco chewing"
                       className="py-2 text-xl pl-2"
@@ -1146,7 +1167,7 @@ const page = () => {
                       </div>
                     </RadioGroup>
                   </div>
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label htmlFor="Alcohol" className="py-2 text-xl pl-2">
                       ALCOHOL :
                     </Label>
@@ -1202,7 +1223,7 @@ const page = () => {
 
               {currentQuestion === 5 && (
                 <>
-                  <div className="w-full flex flex-col px-10 -ml-7">
+                  <div className="w-full flex flex-col px-10 -ml-7 font-arial">
                     <Label
                       htmlFor="History_of_fractures:"
                       className="py-2 text-xl pl-2"
@@ -1261,7 +1282,7 @@ const page = () => {
                     <div className=" w-full flex flex-col px-2">
                       <Label
                         htmlFor="fracture_diagnosed"
-                        className="py-2 text-xl pl-2"
+                        className="py-2 text-xl pl-2 font-arial"
                       >
                         Approximate Age when fracture was diagnosed?
                       </Label>
@@ -1293,7 +1314,7 @@ const page = () => {
                       />
                     </div>
                   )}
-                  <div className="w-full flex flex-col pl-10 -ml-7">
+                  <div className="w-full flex flex-col pl-10 -ml-7 font-arial">
                     <Label
                       htmlFor="History_of_ortho:"
                       className="py-2 text-xl pl-2"
@@ -1358,7 +1379,7 @@ const page = () => {
             <div className="w-full flex items-center justify-center gap-10">
               <Button
                 type="button"
-                className="w-[40%] rounded-full  bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200"
+                className="w-[40%] rounded-full  bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
                 disabled={currentQuestion === 1}
                 onClick={handlePrev}
               >
@@ -1366,19 +1387,8 @@ const page = () => {
               </Button>
               <Button
                 type={"button"}
-                className="w-[40%] rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200"
-                disabled={
-                  isLoading
-                  //  ||
-                  // (isLast && questions.history_of_fractures.trim() === "")
-                }
-                // onClick={(e) => {
-                //   if (isLast && questions.history_of_fractures.trim() !== "") {
-                //     handleSubmit(e);
-                //   } else {
-                //     handleNext();
-                //   }
-                // }}
+                className="w-[40%] rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                disabled={isLoading}
                 onClick={(e) => handleNext(e)}
               >
                 {isLast ? (isLoading ? "SUBMITTING..." : "SUBMIT") : "NEXT"}

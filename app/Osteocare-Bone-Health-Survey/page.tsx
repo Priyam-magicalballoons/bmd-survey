@@ -39,20 +39,20 @@ export default function Dashboard() {
     <div className="min-h-screen flex items-center justify-center pb-2 md:pb-32">
       <div className="flex flex-col gap-12">
         <div className="w-full flex items-center justify-center">
-          <p className="text-center w-1/2 bg-white text-[#1693dc] text-xl font-semibold px-10 py-3 rounded-2xl">
+          <p className="text-center w-1/2 bg-white text-[#1693dc] text-xl font-semibold px-10 py-3 rounded-2xl font-arial">
             HOME
           </p>
         </div>
         <div className="flex-col md:flex-row flex gap-10">
           <Button
-            className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99]"
+            className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial"
             onClick={() =>
               router.push("/Osteocare-Bone-Health-Survey/start-survey")
             }
           >
             START CAMP
           </Button>
-          <Button className="text-2xl md:text-4xl max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060]">
+          <Button className="text-2xl md:text-4xl max-w-80 min-w-88 py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial">
             COMPLETE CAMP
           </Button>
         </div>

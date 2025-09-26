@@ -48,7 +48,7 @@ const page = () => {
     getPatientCounts();
   }, []);
   return (
-    <div className="min-h-screen flex items-center justify-center md:pb-32">
+    <div className="min-h-screen flex items-center justify-center md:pb-32 font-arial">
       <div className="flex flex-col gap-10 py-20">
         <div className="w-full flex items-center justify-center">
           <p className="text-center  bg-white text-[#1693dc] text-xl font-semibold px-10 py-3 rounded-2xl">

@@ -61,7 +61,7 @@ export default function AddDoctorPage() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="rounded-tl-2xl rounded-tr-2xl w-80 bg-white shadow-[0px_10px_2px_1px_rgba(0,_0,_0,_0.1)] pb-10">
-        <div className="bg-[#143975] h-18 rounded-tl-2xl rounded-tr-2xl text-white items-center flex justify-center text-2xl">
+        <div className="bg-[#143975] h-18 rounded-tl-2xl rounded-tr-2xl text-white items-center flex justify-center text-2xl font-arial">
           ADD PATIENT
         </div>
         <div>
@@ -97,7 +97,7 @@ export default function AddDoctorPage() {
             <div className="w-full flex items-center justify-center">
               <Button
                 type="submit"
-                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200"
+                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial font-semibold"
                 disabled={isLoading}
               >
                 {isLoading ? "SUBMITTING..." : "PROCEED"}

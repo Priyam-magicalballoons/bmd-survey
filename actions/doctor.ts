@@ -35,7 +35,7 @@ export const saveDoctor = async () => {
   if (!doctorData) {
     return {
       status: 400,
-      message: "unable to save doctor. kindly try again",
+      message: "Unable to save doctor. kindly try again",
     };
   }
   const parseData = JSON.parse(doctorData);
@@ -56,12 +56,12 @@ export const saveDoctor = async () => {
   if (!createDoctor) {
     return {
       status: 400,
-      message: "unable to save doctor. kindly try again",
+      message: "Unable to save doctor. kindly try again",
     };
   }
 
   return {
     status: 200,
-    message: "doctor created successfully",
+    message: "Doctor created successfully",
   };
 };

@@ -22,7 +22,7 @@ export const AuthenticateUser = async (id: string) => {
   if (!user) {
     return {
       status: 400,
-      message: "unauthorised user",
+      message: "Unauthorised user",
     };
   }
 
@@ -35,7 +35,7 @@ export const AuthenticateUser = async (id: string) => {
     (await cookies()).set("user", token);
     return {
       status: 200,
-      message: "user logged in succesfully",
+      message: "User logged in succesfully",
     };
   } else {
     return {

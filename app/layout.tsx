@@ -35,7 +35,7 @@ export default function RootLayout({
             src="/images/sm-background.png"
             alt="Background"
             fill
-            className="object-cover object-center"
+            className=" object-center"
             priority
           />
         </div>
@@ -46,7 +46,7 @@ export default function RootLayout({
             src="/images/background.png"
             alt="Background"
             fill
-            className="object-cover object-center"
+            className=" object-center bg-center h-full"
             priority
           />
         </div>

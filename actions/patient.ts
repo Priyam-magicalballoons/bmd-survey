@@ -124,7 +124,7 @@ export const getPatientNumber = async () => {
   });
 
   if (!count) {
-    return { status: 400, message: "error in fetching patient counts" };
+    return { status: 400, message: "Error in fetching patient counts" };
   }
 
   return {
