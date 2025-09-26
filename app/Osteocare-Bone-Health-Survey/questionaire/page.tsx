@@ -69,7 +69,7 @@ const page = () => {
     orthopaedic_surgeries: "",
   });
 
-  const [currentQuestion, setCurrentQuestion] = useState(3);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -247,7 +247,7 @@ const page = () => {
         },
       });
       setIsLoading(false);
-      router.push("/add-patient");
+      router.push("/Osteocare-Bone-Health-Survey/add-patient");
       return;
     }
 
@@ -275,7 +275,7 @@ const page = () => {
         },
       });
       setIsLoading(false);
-      router.push("/add-patient");
+      router.push("/Osteocare-Bone-Health-Survey/add-patient");
       return;
     } else {
       toast(savePatientData?.message, {
@@ -287,7 +287,7 @@ const page = () => {
           borderColor: "#bbf7d0",
         },
       });
-      return router.push("/start-survey");
+      return router.push("/Osteocare-Bone-Health-Survey/start-survey");
     }
   };
 
@@ -306,7 +306,7 @@ const page = () => {
           },
         });
         setIsLoading(false);
-        router.push("/add-patient");
+        router.push("/Osteocare-Bone-Health-Survey/add-patient");
       }
     };
 

@@ -55,7 +55,7 @@ export default function LoginPage() {
         borderColor: "#bbf7d0",
       },
     });
-    return router.push("/");
+    return router.push("/Osteocare-Bone-Health-Survey/");
   };
 
   return (

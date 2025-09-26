@@ -62,7 +62,9 @@ const page = () => {
               doctorData && "cursor-not-allowed "
             }`}
             disabled={!!doctorData}
-            onClick={() => router.push("/add-doctor")}
+            onClick={() =>
+              router.push("/Osteocare-Bone-Health-Survey/add-doctor")
+            }
           >
             <Image
               src="/images/doctor.png"
@@ -91,7 +93,9 @@ const page = () => {
           </Button>
           <Button
             className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#d4fcfa] relative overflow-hidden border-2 border-[#143975] hover:bg-[#d4fcfa] hover:scale-105"
-            onClick={() => router.push("/add-patient")}
+            onClick={() =>
+              router.push("/Osteocare-Bone-Health-Survey/add-patient")
+            }
             disabled={!doctorData}
           >
             <Image

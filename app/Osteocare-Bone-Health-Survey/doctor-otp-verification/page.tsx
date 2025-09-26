@@ -61,7 +61,8 @@ export default function DoctorOTPVerificationPage() {
       } else {
         setType("patient");
       }
-      if (!doctorData) return router.push("/start-survey");
+      if (!doctorData)
+        return router.push("/Osteocare-Bone-Health-Survey/start-survey");
       setMobile(doctorData.mobile);
     };
     findMobile();
@@ -101,7 +102,6 @@ export default function DoctorOTPVerificationPage() {
         },
       });
       if (type === "doctor") {
-        console.log("correct");
         const createDoctor = await saveDoctor();
         if (createDoctor.status === 400) {
           toast(createDoctor.message, {
@@ -125,10 +125,10 @@ export default function DoctorOTPVerificationPage() {
               borderColor: "#bbf7d0",
             },
           });
-          router.replace("/start-survey");
+          router.replace("/Osteocare-Bone-Health-Survey/start-survey");
         }
       } else {
-        router.replace("/questionaire");
+        router.replace("/Osteocare-Bone-Health-Survey/questionaire");
       }
     } else {
       toast("Invalid OTP", {
@@ -163,10 +163,6 @@ export default function DoctorOTPVerificationPage() {
       });
       setIsResending(false);
     }, 1000);
-  };
-
-  const handleBack = () => {
-    window.location.href = "/add-doctor";
   };
 
   // const maskedMobile = doctorInfo.mobile

@@ -46,7 +46,9 @@ export default function Dashboard() {
         <div className="flex-col md:flex-row flex gap-10">
           <Button
             className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99]"
-            onClick={() => router.push("/start-survey")}
+            onClick={() =>
+              router.push("/Osteocare-Bone-Health-Survey/start-survey")
+            }
           >
             START CAMP
           </Button>

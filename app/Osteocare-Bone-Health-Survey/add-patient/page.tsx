@@ -52,7 +52,7 @@ export default function AddDoctorPage() {
     }
     const saved = await saveTempData(patientData);
     if (saved?.status === 200) {
-      router.push("/doctor-otp-verification");
+      router.push("/Osteocare-Bone-Health-Survey/doctor-otp-verification");
     }
 
     setIsLoading(false);

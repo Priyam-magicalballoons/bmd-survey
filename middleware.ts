@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// ✅ Public routes
-const publicRoutes = ["/login", "/about", "/contact"];
+// ✅ Public routes (no auth required)
+const publicRoutes = ["/Osteocare-Bone-Health-Survey/login"];
 
-// ✅ Paths that should bypass middleware (static files, Next.js internals, API routes)
-const ignoredPaths = [
-  "/_next",
-  "/favicon.ico",
-  "/images",
-  "/api",
-  "/images",
-  "/images/",
-];
+// ✅ Paths to ignore (static files, Next.js internals, API routes)
+const ignoredPaths = ["/_next", "/favicon.ico", "/images", "/api"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -23,18 +16,24 @@ export function middleware(req: NextRequest) {
 
   const token = req.cookies.get("user");
 
-  // Public routes
+  // If visiting a public route
   if (publicRoutes.includes(pathname)) {
-    if (pathname === "/login" && token) {
-      return NextResponse.redirect(new URL("/", req.url));
+    // Logged-in user should be redirected to root
+    if (token) {
+      return NextResponse.redirect(
+        new URL("/Osteocare-Bone-Health-Survey/", req.url)
+      );
     }
     return NextResponse.next();
   }
 
-  // Protected routes
+  // Protected routes: if no token, redirect to login
   if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(
+      new URL("/Osteocare-Bone-Health-Survey/login", req.url)
+    );
   }
 
+  // Authenticated users on protected routes: allow
   return NextResponse.next();
 }
