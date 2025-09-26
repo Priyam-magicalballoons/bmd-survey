@@ -1,8 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+// next.config.js
+module.exports = {
   basePath: "/Osteocare-Bone-Health-Survey",
-  trailingSlash: true,
+  assetPrefix: "/Osteocare-Bone-Health-Survey",
 };
-
-export default nextConfig;
