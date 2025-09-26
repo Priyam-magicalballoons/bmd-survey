@@ -22,7 +22,7 @@ model Doctor {
   number             String
   registrationNumber String
   coordinatorId      String      @unique
-  coordinator        Coordinator @relation(fields: [coordinatorId], references: [id])
+  coordinator        Coordinator @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   createdAt          DateTime    @default(now())
 }
 
@@ -33,7 +33,7 @@ model Patient {
   gender        String
   number        String
   coordinatorId String
-  coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: NoAction)
+  coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   questionaire  Questionaire?
   createdAt     DateTime      @default(now())
 }

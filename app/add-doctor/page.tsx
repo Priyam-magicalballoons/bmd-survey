@@ -129,7 +129,7 @@ export default function AddDoctorPage() {
               <Input
                 id="regNo"
                 type="text"
-                placeholder="Registeration No."
+                placeholder="Registration No."
                 value={doctorData.regNo}
                 onChange={(e) =>
                   setDoctorData((prev) => ({

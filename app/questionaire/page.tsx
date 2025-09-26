@@ -69,7 +69,7 @@ const page = () => {
     orthopaedic_surgeries: "",
   });
 
-  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [currentQuestion, setCurrentQuestion] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -554,12 +554,12 @@ const page = () => {
               )}
               {currentQuestion === 3 && (
                 <>
-                  <p className="uppercase text-center font-semibold text-lg px-3">
-                    Existing medical conditions :
+                  <p className="uppercase text-center font-semibold text-lg px-2">
+                    Q. Existing medical conditions
                   </p>
                   <div className="w-full flex flex-col px-10 -ml-7">
                     <Label htmlFor="gender" className="py-2 text-xl pl-2">
-                      COPD / ASTHAMA
+                      i. COPD / Asthama
                     </Label>
                     <RadioGroup
                       defaultValue={questions.existing_medical_conditions.copd}
@@ -674,7 +674,7 @@ const page = () => {
 
                   <div className="w-full flex flex-col px-10 -ml-7">
                     <Label htmlFor="knee" className="py-2 text-xl pl-2">
-                      Knee Osteoarthritis :
+                      ii. Knee Osteoarthritis :
                     </Label>
                     <RadioGroup
                       defaultValue={
@@ -734,7 +734,7 @@ const page = () => {
 
                   <div className="w-full flex flex-col px-10 -ml-7">
                     <Label htmlFor="Diabetes" className="py-2 text-xl pl-2">
-                      Diabetes :
+                      iii. Diabetes :
                     </Label>
                     <RadioGroup
                       defaultValue={
@@ -794,7 +794,7 @@ const page = () => {
 
                   <div className="w-full flex flex-col px-10 -ml-7">
                     <Label htmlFor="Epilepsy" className="py-2 text-xl pl-2">
-                      Epilepsy:
+                      iv. Epilepsy:
                     </Label>
                     <RadioGroup
                       defaultValue={questions.existing_medical_conditions.copd}
@@ -909,8 +909,11 @@ const page = () => {
                   )}
 
                   <div className="w-full flex flex-col px-10 -ml-7">
-                    <Label htmlFor="Hypertension" className="py-2 text-xl pl-2">
-                      Hypertension/Heart disease:
+                    <Label
+                      htmlFor="Hypertension"
+                      className="py-2 text-xl pl-2 "
+                    >
+                      v. Hypertension/Heart disease:
                     </Label>
                     <RadioGroup
                       defaultValue={

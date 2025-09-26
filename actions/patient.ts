@@ -88,7 +88,6 @@ export const savePatient = async (data: PatientData) => {
             patientId: patient.id,
           },
         });
-
         return { patient, questionnaire };
       })
     );
@@ -123,6 +122,10 @@ export const getPatientNumber = async () => {
       coordinatorId: coordinatorId.id,
     },
   });
+
+  if (!count) {
+    return { status: 400, message: "error in fetching patient counts" };
+  }
 
   return {
     status: 200,

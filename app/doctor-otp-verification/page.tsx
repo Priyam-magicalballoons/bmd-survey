@@ -189,6 +189,7 @@ export default function DoctorOTPVerificationPage() {
                 id="username"
                 type="text"
                 placeholder=""
+                inputMode="numeric"
                 value={otp}
                 onChange={(e) => {
                   const value = e.target.value.replace(/\D/g, "").slice(0, 6);
