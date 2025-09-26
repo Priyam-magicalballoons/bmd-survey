@@ -4,6 +4,7 @@ import { findDoctor } from "@/actions/doctor";
 import { getPatientNumber } from "@/actions/patient";
 import { Button } from "@/components/ui/button";
 import { getCampData } from "@/lib/helpers";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -63,10 +64,12 @@ const page = () => {
             disabled={!!doctorData}
             onClick={() => router.push("/add-doctor")}
           >
-            <img
+            <Image
               src="/images/doctor.png"
-              className="-left-8 absolute h-44 -bottom-6 "
+              className="-left-8 absolute h-44 -bottom-6"
               alt=""
+              width={200}
+              height={100}
             />
             {doctorData ? (
               <div className="absolute right-3 text-[#1693dc] text-lg md:text-xl text-left">
@@ -91,10 +94,12 @@ const page = () => {
             onClick={() => router.push("/add-patient")}
             disabled={!doctorData}
           >
-            <img
+            <Image
               src="/images/girl.png"
               className="left-2 absolute h-44 -bottom-5 "
               alt=""
+              width={200}
+              height={100}
             />
             <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
               ADD PATIENT
