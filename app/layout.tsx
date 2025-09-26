@@ -32,7 +32,7 @@ export default function RootLayout({
         {/* Background image for mobile */}
         <div className="absolute inset-0 md:hidden -z-10">
           <Image
-            src="/images/sm-background.png"
+            src="/sm-background.png"
             alt="Background"
             fill
             className="object-cover object-center"
@@ -43,7 +43,7 @@ export default function RootLayout({
         {/* Background image for desktop */}
         <div className="absolute inset-0 hidden md:block -z-10">
           <Image
-            src="/images/background.png"
+            src="/background.png"
             alt="Background"
             fill
             className="object-cover object-center"
