@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { cookies } from "next/headers";
 
 export const generateOTP = async (phone: string) => {
@@ -11,26 +13,28 @@ export const generateOTP = async (phone: string) => {
 
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
-  const saveToDb = await prisma.otp.upsert({
-    where: {
-      phone,
-    },
-    update: {
-      otp,
-      expiresAt,
-    },
-    create: {
-      phone,
-      otp,
-      expiresAt,
-    },
-  });
-
-  if (!saveToDb) {
-    return {
-      status: 400,
-      message: "error in saving otp",
-    };
+  try {
+    const saveToDb = await prisma.otp.create({
+      data: {
+        phone,
+        otp,
+        expiresAt,
+      },
+    });
+  } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        return {
+          status: 500,
+          message: "Number already exists",
+        };
+      }
+    } else {
+      return {
+        status: 400,
+        message: "Error in saving phone number.",
+      };
+    }
   }
 
   // console.log(otp);
@@ -88,7 +92,7 @@ Cipla`;
 
   console.log(otp);
 
-  return true;
+  return { status: 200, message: "" };
 };
 
 export const verifyOTP = async (otp: string) => {

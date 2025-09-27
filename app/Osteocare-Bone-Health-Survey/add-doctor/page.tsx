@@ -79,7 +79,18 @@ export default function AddDoctorPage() {
     //   });
     // } else {
     const otp = await generateOTP(doctorData.mobile);
-    if (!otp) return;
+    if (otp.status === 500 || otp.status === 400) {
+      toast(otp.message, {
+        position: "top-center",
+        style: {
+          backgroundColor: "#feff98",
+          color: "#121212",
+          borderColor: "#fec106",
+        },
+      });
+      setIsLoading(false);
+      return;
+    }
     const saved = await saveTempData(doctorData);
     if (saved?.status === 200) {
       router.push("/Osteocare-Bone-Health-Survey/doctor-otp-verification");

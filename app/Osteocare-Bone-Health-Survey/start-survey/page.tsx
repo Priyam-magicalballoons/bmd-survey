@@ -22,13 +22,21 @@ type DoctorDataType = {
 
 const page = () => {
   const router = useRouter();
-  const [doctorData, setDoctorData] = useState<DoctorDataType>();
+  const [doctorData, setDoctorData] = useState<DoctorDataType | undefined>({
+    id: "id",
+    mslCode: "msl",
+    name: "name",
+    registrationNumber: "reg",
+  });
   const [campData, setCampData] = useState<CampDataType>();
   const [patientCount, setPatientCount] = useState(0);
 
   const getDoctor = async () => {
     const doctor = await findDoctor();
-    if (!doctor) return;
+    if (!doctor) {
+      setDoctorData(undefined);
+      return;
+    }
     setDoctorData(doctor);
   };
 
@@ -58,7 +66,7 @@ const page = () => {
 
         <div className="flex-col md:flex-row flex gap-10">
           <Button
-            className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-80 ${
+            className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-100 disabled:scale-95 disabled:bg-gray-200 ${
               doctorData && "cursor-not-allowed "
             }`}
             disabled={!!doctorData}
@@ -74,10 +82,14 @@ const page = () => {
               height={100}
             />
             {doctorData ? (
-              <div className="absolute right-3 text-[#1693dc] text-lg md:text-xl text-left">
-                <p>Name : {doctorData.name.split(" ")[0]}</p>
-                <p>Msl Code : {doctorData.mslCode}</p>
-                <p>Reg. No : {doctorData.registrationNumber}</p>
+              <div className="absolute right-3 text-[#1693dc] text-[15px] md:text-xl md:max-w-44 text-left">
+                <p className="truncate">
+                  Name : {doctorData.name.split(" ")[0]}
+                </p>
+                <p className="truncate">Msl Code : {doctorData.mslCode}</p>
+                <p className="truncate">
+                  Reg. No : {doctorData.registrationNumber}
+                </p>
                 <p className="text-transparent">dummy</p>
               </div>
             ) : (
@@ -93,9 +105,10 @@ const page = () => {
           </Button>
           <Button
             className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#d4fcfa] relative overflow-hidden border-2 border-[#143975] hover:bg-[#d4fcfa] hover:scale-105 cursor-pointer"
-            onClick={() =>
-              router.push("/Osteocare-Bone-Health-Survey/add-patient")
-            }
+            onClick={() => {
+              if (doctorData?.id === "id") return;
+              router.push("/Osteocare-Bone-Health-Survey/add-patient");
+            }}
             disabled={!doctorData}
           >
             <Image

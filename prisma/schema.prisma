@@ -12,6 +12,7 @@ model Coordinator {
   campId    String    @unique
   patients  Patient[]
   doctor    Doctor?
+  isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
 }
 

@@ -26,6 +26,13 @@ export const AuthenticateUser = async (id: string) => {
     };
   }
 
+  if (!user.isActive) {
+    return {
+      status: 400,
+      message: "This camp is already closed.",
+    };
+  }
+
   const token = await jwt.sign(
     { id: user.id, campId: user.campId },
     process.env.JWT_SECRET as string

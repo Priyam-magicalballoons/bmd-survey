@@ -21,18 +21,27 @@ import {
 import { useRouter } from "next/navigation";
 import { LogoutUser } from "@/actions/auth";
 import { findDoctor } from "@/actions/doctor";
+import { completeCamp } from "@/lib/helpers";
+import { toast } from "sonner";
 
 export default function Dashboard() {
-  const [campId, setCampId] = useState("");
-
   const router = useRouter();
 
-  const handleAddDoctor = () => {
-    window.location.href = "/add-doctor";
-  };
+  const handleCompleteCamp = async () => {
+    const resposne = await completeCamp();
+    toast(resposne?.message, {
+      duration: 2000,
+      position: "top-center",
+      style: {
+        backgroundColor: "#fef2f2",
+        color: "#991b1b",
+        borderColor: "#fecaca",
+      },
+    });
 
-  const handleReports = () => {
-    window.location.href = "/reports";
+    if (resposne?.status === 200) {
+      await LogoutUser();
+    }
   };
 
   return (
@@ -45,14 +54,17 @@ export default function Dashboard() {
         </div>
         <div className="flex-col md:flex-row flex gap-10">
           <Button
-            className="text-2xl md:text-4xl px-16 max-w-80 min-w-88 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial cursor-pointer"
+            className="text-2xl md:text-4xl px-16 max-w-80 min-w-[47%] py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial cursor-pointer"
             onClick={() =>
               router.push("/Osteocare-Bone-Health-Survey/start-survey")
             }
           >
             START CAMP
           </Button>
-          <Button className="text-2xl md:text-4xl max-w-80 min-w-88 py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial cursor-pointer">
+          <Button
+            className="text-2xl md:text-4xl max-w-80 min-w-[48%] py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial cursor-pointer"
+            // onClick={handleCompleteCamp}
+          >
             COMPLETE CAMP
           </Button>
         </div>

@@ -2,6 +2,7 @@
 
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { prisma } from "@/prisma/client";
 
 export const getCampData = async () => {
   const token = (await cookies()).get("user")?.value;
@@ -84,4 +85,35 @@ export const withRetry = async <T>(
     }
   }
   throw new Error("Unexpected retry error");
+};
+
+export const completeCamp = async () => {
+  const token = (await cookies()).get("user")?.value;
+  if (!token) {
+    throw new Error("token not available");
+  }
+
+  const user = jwt.decode(token) as { id: string; campId: string };
+
+  if (!user) {
+    return {
+      status: 400,
+      message: "Unauthorised user",
+    };
+  }
+  const response = await prisma.coordinator.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      isActive: false,
+    },
+  });
+
+  if (response) {
+    return {
+      status: 200,
+      message: "Camp closed successfully",
+    };
+  }
 };

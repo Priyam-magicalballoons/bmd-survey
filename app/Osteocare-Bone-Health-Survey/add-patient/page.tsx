@@ -46,7 +46,15 @@ export default function AddDoctorPage() {
     }
 
     const otp = await generateOTP(patientData.mobile);
-    if (!otp) {
+    if (otp.status === 500 || otp.status === 400) {
+      toast(otp.message, {
+        position: "top-center",
+        style: {
+          backgroundColor: "#feff98",
+          color: "#121212",
+          borderColor: "#fec106",
+        },
+      });
       setIsLoading(false);
       return;
     }
