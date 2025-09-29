@@ -2,6 +2,7 @@
 
 import { withRetry } from "@/lib/helpers";
 import { prisma } from "@/prisma/client";
+import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
@@ -98,11 +99,21 @@ export const savePatient = async (data: PatientData) => {
       data: result,
     };
   } catch (error: any) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2028") {
+        // Transaction API timeout
+        return {
+          status: 400,
+          message: "Database is busy. Please try again in a few seconds.",
+        };
+      }
+    }
+
+    // Other errors
     console.error("Error saving patient:", error);
     return {
       status: 500,
-      message: "Internal server error",
-      error: error.message,
+      message: "Internal server error. Please try again later.",
     };
   }
 };

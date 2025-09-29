@@ -263,7 +263,11 @@ const page = () => {
 
     const savePatientData = await savePatient({ ...sessionData, ...questions });
 
-    if (!savePatientData || savePatientData?.status === 400) {
+    if (
+      !savePatientData ||
+      savePatientData?.status === 400 ||
+      savePatientData.status === 500
+    ) {
       toast(savePatientData?.message, {
         description: "Kindly try again.",
         duration: 2000,
