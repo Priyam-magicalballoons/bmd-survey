@@ -70,7 +70,7 @@ model Questionaire {
   createdAt                   DateTime @default(now())
 }
 
-model Otp {
+model otp {
   id        String   @id @default(uuid())
   otp       String
   phone     String   @unique

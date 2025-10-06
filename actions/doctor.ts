@@ -1,5 +1,6 @@
 "use server";
 import { getCampData } from "@/lib/helpers";
+import { decryptData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
@@ -44,7 +45,7 @@ export const saveDoctor = async () => {
   const createDoctor = await prisma.doctor.create({
     data: {
       mslCode: parseData.mslCode,
-      otp: parseData.one,
+      otp: decryptData(parseData.one),
       name: parseData.name,
       number: parseData.mobile,
       registrationNumber: parseData.regNo,

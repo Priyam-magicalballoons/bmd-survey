@@ -32,10 +32,11 @@ const page = () => {
     const doctor = await findDoctor();
     if (!doctor) {
       setDoctorData(undefined);
+      setLoaded(true);
       return;
     }
     setDoctorData(doctor);
-    setLoaded(true);
+    setLoaded(false);
   };
 
   const getPatientCounts = async () => {
@@ -65,7 +66,7 @@ const page = () => {
 
         <div className="flex-col md:flex-row flex gap-10">
           <Button
-            className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-100 disabled:scale-95 disabled:bg-gray-200 ${
+            className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-100  disabled:bg-gray-200 ${
               doctorData && "cursor-not-allowed "
             }`}
             disabled={!!doctorData || !loaded}

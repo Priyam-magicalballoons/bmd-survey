@@ -1,7 +1,7 @@
 "use server";
 
 import { withRetry } from "@/lib/helpers";
-import { decryptData, encryptData } from "@/lib/saveTempUserData";
+import { decryptData, encryptData, hashData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
@@ -70,7 +70,7 @@ export const savePatient = async (data: PatientData) => {
         // Always create a new patient (DB will enforce uniqueness on number)
         await prismaTx.otp.create({
           data: {
-            phone: data.mobile!,
+            phone: hashData(data.mobile!),
             otp: decryptData(data.one!),
           },
         });
