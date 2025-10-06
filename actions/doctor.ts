@@ -22,10 +22,10 @@ export const findDoctor = async () => {
   });
 
   if (!doctor) return;
-  (await cookies()).set(
-    "doctorId",
-    jwt.sign(doctor, process.env.JWT_SECRET as string)
-  );
+  // (await cookies()).set(
+  //   "doctorId",
+  //   jwt.sign(doctor, process.env.JWT_SECRET as string)
+  // );
   if (doctor) return doctor;
 };
 
@@ -44,6 +44,7 @@ export const saveDoctor = async () => {
   const createDoctor = await prisma.doctor.create({
     data: {
       mslCode: parseData.mslCode,
+      otp: parseData.otp,
       name: parseData.name,
       number: parseData.mobile,
       registrationNumber: parseData.regNo,

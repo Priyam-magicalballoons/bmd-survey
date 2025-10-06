@@ -4,6 +4,8 @@ import { prisma } from "@/prisma/client";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { cookies } from "next/headers";
+import { decryptData, encryptData, hashData } from "./saveTempUserData";
+import { getTempData } from "./helpers";
 
 export const generateOTP = async (phone: string) => {
   let otp = "";
@@ -16,11 +18,18 @@ export const generateOTP = async (phone: string) => {
   try {
     const saveToDb = await prisma.otp.create({
       data: {
-        phone,
+        phone: hashData(phone),
         otp,
         expiresAt,
       },
     });
+
+    if (!saveToDb) {
+      return {
+        status: 400,
+        message: "Error in saving phone number.",
+      };
+    }
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
@@ -30,6 +39,7 @@ export const generateOTP = async (phone: string) => {
         };
       }
     } else {
+      console.log(error);
       return {
         status: 400,
         message: "Error in saving phone number.",
@@ -97,6 +107,7 @@ Cipla`;
 
 export const verifyOTP = async (otp: string) => {
   const data = (await cookies()).get("tempData")?.value;
+
   if (!data) {
     return {
       status: 400,
@@ -104,8 +115,11 @@ export const verifyOTP = async (otp: string) => {
     };
   }
   const parseData = JSON.parse(data);
+
+  const phone = hashData(parseData.mobile);
+
   const otpRecord = await prisma.otp.findUnique({
-    where: { phone: parseData.mobile, otp },
+    where: { phone, otp },
   });
 
   if (!otpRecord) {
@@ -115,6 +129,12 @@ export const verifyOTP = async (otp: string) => {
     };
   }
 
+  (await cookies()).set("tempData", JSON.stringify({ ...parseData, otp }), {
+    httpOnly: true,
+    maxAge: 600,
+    secure: true,
+    path: "/",
+  });
   return {
     status: 200,
     message: "success",

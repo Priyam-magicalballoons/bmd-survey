@@ -3,6 +3,7 @@
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { prisma } from "@/prisma/client";
+import { encryptData } from "./saveTempUserData";
 
 export const getCampData = async () => {
   const token = (await cookies()).get("user")?.value;
@@ -20,11 +21,13 @@ export const saveTempData = async ({
   mslCode,
   mobile,
   regNo,
+  otp,
 }: {
   name?: string;
   mslCode?: string;
   mobile: string;
   regNo?: string;
+  otp?: string;
 }) => {
   if (!mobile) return;
   const saved = (await cookies()).set(
@@ -57,12 +60,14 @@ export const getTempData = async () => {
     return {
       mobile: parseData.mobile,
       type: "doctor",
+      otp: parseData.otp || null,
     };
   } else {
     return {
       mobile: parseData.mobile,
       name: parseData.name,
       type: "patient",
+      otp: parseData.otp || null,
     };
   }
 };
@@ -70,21 +75,37 @@ export const getTempData = async () => {
 export const withRetry = async <T>(
   fn: () => Promise<T>,
   retries = 3,
-  delayMs = 3000
+  delayMs = 1000
 ): Promise<T> => {
+  let lastError: any = null;
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      return await fn();
+      const result = await fn();
+      if (attempt > 1) {
+        console.log(`✅ Succeeded on retry attempt ${attempt}`);
+      }
+      return result;
     } catch (err: any) {
-      if (attempt === retries) throw err;
-      console.warn(
-        `Retry ${attempt} failed. Retrying in ${delayMs}ms...`,
-        err.message
-      );
-      await new Promise((res) => setTimeout(res, delayMs));
+      lastError = err;
+      const retryableCodes = ["P2028", "P2034"];
+      if (attempt < retries && err.code && retryableCodes.includes(err.code)) {
+        const backoff = delayMs * Math.pow(2, attempt - 1); // exponential
+        console.warn(
+          `⚠️ Retry ${attempt} failed (${err.code}). Retrying in ${backoff}ms...`
+        );
+        await new Promise((res) => setTimeout(res, backoff));
+      } else {
+        break;
+      }
     }
   }
-  throw new Error("Unexpected retry error");
+
+  console.error(
+    `🔴 All ${retries} attempts failed. Last error:`,
+    lastError?.code || lastError
+  );
+  throw new Error("Unexpected retry error after all attempts");
 };
 
 export const completeCamp = async () => {

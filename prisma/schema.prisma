@@ -20,8 +20,9 @@ model Doctor {
   id                 String      @id @default(uuid())
   name               String
   mslCode            String
-  number             String
+  number             String      @unique
   registrationNumber String
+  otp                String
   coordinatorId      String      @unique
   coordinator        Coordinator @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   createdAt          DateTime    @default(now())
@@ -32,8 +33,10 @@ model Patient {
   name          String?
   age           String
   gender        String
-  number        String
+  number        String        @unique
   coordinatorId String
+  otp           String
+  patientId     String        @unique
   coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   questionaire  Questionaire?
   createdAt     DateTime      @default(now())

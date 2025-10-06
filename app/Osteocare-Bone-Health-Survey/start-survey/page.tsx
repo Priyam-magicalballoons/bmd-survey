@@ -22,6 +22,7 @@ type DoctorDataType = {
 
 const page = () => {
   const router = useRouter();
+
   const [doctorData, setDoctorData] = useState<DoctorDataType | undefined>({
     id: "id",
     mslCode: "msl",

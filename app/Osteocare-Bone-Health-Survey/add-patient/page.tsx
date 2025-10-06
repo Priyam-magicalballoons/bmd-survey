@@ -43,6 +43,8 @@ export default function AddDoctorPage() {
           borderColor: "#fec106",
         },
       });
+      setIsLoading(false);
+      return;
     }
 
     const otp = await generateOTP(patientData.mobile);

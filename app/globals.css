@@ -60,13 +60,37 @@
 ::-webkit-scrollbar {
   display: none;
 }
+::-webkit-scrollbar:vertical {
+  width: 12px;
+  /* scrollbar width */
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  background-color: red;
+  /* scrollbar thumb (draggable part) */
+  border-radius: 6px;
+  /* rounded edges */
+}
+
+::-webkit-scrollbar-track:vertical {
+  background: #f1f1f1;
+  /* scrollbar track background */
+}
 
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
-  -ms-overflow-style: none;
-  /* IE and old Edge */
-  scrollbar-width: none;
-  /* Firefox */
+  scrollbar-width: thin;
+  /* keeps horizontal scrollbar */
+  scrollbar-color: transparent transparent;
+  /* vertical hidden */
+}
+
+/* For IE and old Edge */
+body {
+  -ms-overflow-style: auto;
+  /* allow scrollbars */
+  overflow-y: scroll;
+  /* ensure scroll still works */
 }
 
 .dark {

@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { getCampData, getTempData } from "@/lib/helpers";
-import { producePatientEvent } from "@/lib/producer";
+import { getTempData } from "@/lib/helpers";
+import {
+  getTempPatientData,
+  saveTempPatientData,
+} from "@/lib/saveTempUserData";
 import { ArrowRight, Circle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
@@ -261,14 +264,51 @@ const page = () => {
     //   campData.id
     // );
 
-    const savePatientData = await savePatient({ ...sessionData, ...questions });
+    try {
+      const savePatientData = await savePatient({
+        ...sessionData,
+        ...questions,
+      });
 
-    if (
-      !savePatientData ||
-      savePatientData?.status === 400 ||
-      savePatientData.status === 500
-    ) {
-      toast(savePatientData?.message, {
+      if (
+        !savePatientData ||
+        savePatientData?.status === 400 ||
+        savePatientData.status === 500 ||
+        savePatientData.status === 503 ||
+        savePatientData.status === 401
+      ) {
+        // Save unsaved patient data in localStorage
+        saveTempPatientData({ ...sessionData, ...questions });
+
+        toast(savePatientData?.message, {
+          description: "Kindly try again.",
+          duration: 5000,
+          position: "top-center",
+          style: {
+            backgroundColor: "#fef2f2",
+            color: "#991b1b",
+            borderColor: "#fecaca",
+          },
+        });
+
+        setIsLoading(false);
+        router.push("/Osteocare-Bone-Health-Survey/start-survey");
+        return;
+      } else {
+        toast(savePatientData?.message, {
+          duration: 2000,
+          position: "top-center",
+          style: {
+            backgroundColor: "#f0fdf4",
+            color: "#166534",
+            borderColor: "#bbf7d0",
+          },
+        });
+
+        return router.push("/Osteocare-Bone-Health-Survey/start-survey");
+      }
+    } catch (error) {
+      toast("Unexpected error occurred", {
         description: "Kindly try again.",
         duration: 2000,
         position: "top-center",
@@ -278,20 +318,9 @@ const page = () => {
           borderColor: "#fecaca",
         },
       });
+
       setIsLoading(false);
-      router.push("/Osteocare-Bone-Health-Survey/add-patient");
-      return;
-    } else {
-      toast(savePatientData?.message, {
-        duration: 2000,
-        position: "top-center",
-        style: {
-          backgroundColor: "#f0fdf4",
-          color: "#166534",
-          borderColor: "#bbf7d0",
-        },
-      });
-      return router.push("/Osteocare-Bone-Health-Survey/start-survey");
+      router.push("/Osteocare-Bone-Health-Survey/start-survey");
     }
   };
 
