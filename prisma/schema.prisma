@@ -22,7 +22,7 @@ model Doctor {
   mslCode            String
   number             String      @unique
   registrationNumber String
-  otp                String
+  otp                String?
   coordinatorId      String      @unique
   coordinator        Coordinator @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   createdAt          DateTime    @default(now())
