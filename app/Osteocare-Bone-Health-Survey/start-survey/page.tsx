@@ -23,14 +23,10 @@ type DoctorDataType = {
 const page = () => {
   const router = useRouter();
 
-  const [doctorData, setDoctorData] = useState<DoctorDataType | undefined>({
-    id: "id",
-    mslCode: "msl",
-    name: "name",
-    registrationNumber: "reg",
-  });
+  const [doctorData, setDoctorData] = useState<DoctorDataType | undefined>();
   const [campData, setCampData] = useState<CampDataType>();
   const [patientCount, setPatientCount] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   const getDoctor = async () => {
     const doctor = await findDoctor();
@@ -39,6 +35,7 @@ const page = () => {
       return;
     }
     setDoctorData(doctor);
+    setLoaded(true);
   };
 
   const getPatientCounts = async () => {
@@ -56,6 +53,7 @@ const page = () => {
     getDoctor();
     getPatientCounts();
   }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center md:pb-32 font-arial">
       <div className="flex flex-col gap-10 py-20">
@@ -70,10 +68,11 @@ const page = () => {
             className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-100 disabled:scale-95 disabled:bg-gray-200 ${
               doctorData && "cursor-not-allowed "
             }`}
-            disabled={!!doctorData}
-            onClick={() =>
-              router.push("/Osteocare-Bone-Health-Survey/add-doctor")
-            }
+            disabled={!!doctorData || !loaded}
+            onClick={() => {
+              if (!loaded) return;
+              router.push("/Osteocare-Bone-Health-Survey/add-doctor");
+            }}
           >
             <Image
               src="/images/doctor.png"

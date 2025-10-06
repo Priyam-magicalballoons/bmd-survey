@@ -68,6 +68,7 @@ export default function Dashboard() {
             COMPLETE CAMP
           </Button>
         </div>
+        <div></div>
       </div>
       {/* Header */}
       {/* <header className="bg-card border-b border-border">

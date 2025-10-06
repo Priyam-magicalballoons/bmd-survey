@@ -1,7 +1,7 @@
 "use server";
 
 import { withRetry } from "@/lib/helpers";
-import { encryptData } from "@/lib/saveTempUserData";
+import { decryptData, encryptData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
@@ -71,7 +71,7 @@ export const savePatient = async (data: PatientData) => {
         await prismaTx.otp.create({
           data: {
             phone: data.mobile!,
-            otp: data.one!,
+            otp: decryptData(data.one!),
           },
         });
         const patient = await prismaTx.patient.create({
@@ -79,7 +79,7 @@ export const savePatient = async (data: PatientData) => {
             name: encryptData(data.name),
             age: data.age,
             gender: data.gender,
-            otp: data.one!,
+            otp: decryptData(data.one!),
             patientId: nextPatientId,
             number: encryptData(data.mobile), // must be unique at DB level
             coordinatorId: coordinator.id,

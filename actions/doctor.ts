@@ -44,7 +44,7 @@ export const saveDoctor = async () => {
   const createDoctor = await prisma.doctor.create({
     data: {
       mslCode: parseData.mslCode,
-      otp: parseData.otp,
+      otp: parseData.one,
       name: parseData.name,
       number: parseData.mobile,
       registrationNumber: parseData.regNo,
