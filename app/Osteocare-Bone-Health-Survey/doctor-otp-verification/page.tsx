@@ -54,7 +54,6 @@ export default function DoctorOTPVerificationPage() {
       }
       if (!doctorData)
         return router.push("/Osteocare-Bone-Health-Survey/start-survey");
-      setMobile(doctorData.mobile);
     };
     findMobile();
   }, []);

@@ -32,7 +32,7 @@ export const saveTempData = async ({
   if (!mobile) return;
   const saved = (await cookies()).set(
     "tempData",
-    JSON.stringify({ name, mslCode, regNo, mobile }),
+    JSON.stringify({ name, mslCode, regNo, mobile, one: otp }),
     {
       httpOnly: true,
       maxAge: 600,
@@ -60,14 +60,14 @@ export const getTempData = async () => {
     return {
       mobile: parseData.mobile,
       type: "doctor",
-      otp: parseData.otp || null,
+      otp: parseData.one || null,
     };
   } else {
     return {
       mobile: parseData.mobile,
       name: parseData.name,
       type: "patient",
-      otp: parseData.otp || null,
+      otp: parseData.one || null,
     };
   }
 };

@@ -10,7 +10,7 @@ import { cookies } from "next/headers";
 interface PatientData {
   name?: string | undefined;
   age: string;
-  otp?: string;
+  one?: string;
   gender: string;
   mobile?: string | undefined;
   height: string;
@@ -68,12 +68,18 @@ export const savePatient = async (data: PatientData) => {
     const result = await withRetry(async () =>
       prisma.$transaction(async (prismaTx) => {
         // Always create a new patient (DB will enforce uniqueness on number)
+        await prismaTx.otp.create({
+          data: {
+            phone: data.mobile!,
+            otp: data.one!,
+          },
+        });
         const patient = await prismaTx.patient.create({
           data: {
             name: encryptData(data.name),
             age: data.age,
             gender: data.gender,
-            otp: data.otp!,
+            otp: data.one!,
             patientId: nextPatientId,
             number: encryptData(data.mobile), // must be unique at DB level
             coordinatorId: coordinator.id,

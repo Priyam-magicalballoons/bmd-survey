@@ -26,6 +26,7 @@ export default function AddDoctorPage() {
     mslCode: "",
     mobile: "",
     regNo: "",
+    otp: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -91,7 +92,8 @@ export default function AddDoctorPage() {
       setIsLoading(false);
       return;
     }
-    const saved = await saveTempData(doctorData);
+
+    const saved = await saveTempData({ ...doctorData, otp: otp.message });
     if (saved?.status === 200) {
       router.push("/Osteocare-Bone-Health-Survey/doctor-otp-verification");
     }

@@ -75,7 +75,6 @@ model Otp {
   otp       String
   phone     String   @unique
   createdAt DateTime @default(now())
-  expiresAt DateTime
 
   @@index([otp, phone])
 }

@@ -268,6 +268,7 @@ const page = () => {
       const savePatientData = await savePatient({
         ...sessionData,
         ...questions,
+        one: sessionData.otp,
       });
 
       if (
@@ -324,27 +325,28 @@ const page = () => {
     }
   };
 
-  useEffect(() => {
-    const getSessionData = async () => {
-      const sessionData = await getTempData();
-      if (sessionData.status === 400) {
-        toast(sessionData.message, {
-          description: "Kindly try again.",
-          duration: 2000,
-          position: "top-center",
-          style: {
-            backgroundColor: "#fef2f2",
-            color: "#991b1b",
-            borderColor: "#fecaca",
-          },
-        });
-        setIsLoading(false);
-        router.push("/Osteocare-Bone-Health-Survey/add-patient");
-      }
-    };
+  // useEffect(() => {
+  //   const getSessionData = async () => {
+  //     const sessionData = await getTempData();
+  //     if (sessionData.status === 400) {
+  //       toast(sessionData.message, {
+  //         description: "Kindly try again.",
+  //         duration: 2000,
+  //         position: "top-center",
+  //         style: {
+  //           backgroundColor: "#fef2f2",
+  //           color: "#991b1b",
+  //           borderColor: "#fecaca",
+  //         },
+  //       });
+  //       setIsLoading(false);
+  //       router.push("/Osteocare-Bone-Health-Survey/add-patient");
+  //     }
+  //   };
 
-    getSessionData();
-  }, [currentQuestion, handleSubmit]);
+  //   getSessionData();
+  // }, [currentQuestion, handleSubmit]);
+
   return (
     <div className="flex min-h-screen max-h-screen justify-center overflow-y-scroll py-20 w-full">
       <div className="rounded-tl-2xl rounded-tr-2xl h-fit w-80 bg-white shadow-[0px_10px_2px_1px_rgba(0,_0,_0,_0.1)] pb-10">

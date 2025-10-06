@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { cookies } from "next/headers";
 import { decryptData, encryptData, hashData } from "./saveTempUserData";
 import { getTempData } from "./helpers";
+import { parse } from "path";
 
 export const generateOTP = async (phone: string) => {
   let otp = "";
@@ -13,40 +14,49 @@ export const generateOTP = async (phone: string) => {
     otp += Math.floor(Math.random() * 10);
   }
 
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+  const phoneExists = await prisma.otp.findUnique({
+    where: {
+      phone: hashData(phone),
+    },
+  });
 
-  try {
-    const saveToDb = await prisma.otp.create({
-      data: {
-        phone: hashData(phone),
-        otp,
-        expiresAt,
-      },
-    });
-
-    if (!saveToDb) {
-      return {
-        status: 400,
-        message: "Error in saving phone number.",
-      };
-    }
-  } catch (error: any) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
-        return {
-          status: 500,
-          message: "Number already exists",
-        };
-      }
-    } else {
-      console.log(error);
-      return {
-        status: 400,
-        message: "Error in saving phone number.",
-      };
-    }
+  if (phoneExists) {
+    return {
+      status: 500,
+      message: "Number already exists",
+    };
   }
 
+  // try {
+  //   const saveToDb = await prisma.otp.create({
+  //     data: {
+  //       phone: hashData(phone),
+  //       otp,
+  //     },
+  //   });
+
+  //   if (!saveToDb) {
+  //     return {
+  //       status: 400,
+  //       message: "Error in saving phone number.",
+  //     };
+  //   }
+  // } catch (error: any) {
+  //   if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  //     if (error.code === "P2002") {
+  //       return {
+  //         status: 500,
+  //         message: "Number already exists",
+  //       };
+  //     }
+  //   } else {
+  //     console.log(error);
+  //     return {
+  //       status: 400,
+  //       message: "Error in saving phone number.",
+  //     };
+  //   }
+  // }
   // console.log(otp);
   // return true;
 
@@ -101,8 +111,7 @@ Cipla`;
   //   });
 
   console.log(otp);
-
-  return { status: 200, message: "" };
+  return { status: 200, message: encryptData(otp) };
 };
 
 export const verifyOTP = async (otp: string) => {
@@ -116,27 +125,40 @@ export const verifyOTP = async (otp: string) => {
   }
   const parseData = JSON.parse(data);
 
+  console.log(parseData);
+
   const phone = hashData(parseData.mobile);
+  const savedOTP = decryptData(parseData.one);
 
-  const otpRecord = await prisma.otp.findUnique({
-    where: { phone, otp },
-  });
-
-  if (!otpRecord) {
+  const type = parseData.mslCode ? "doctor" : "patient";
+  console.log("type🍕🍕", type);
+  if (savedOTP === otp) {
+    if (type === "doctor") {
+      const otpRecord = await prisma.otp.create({
+        data: { phone, otp },
+      });
+      if (!otpRecord) {
+        return {
+          status: 400,
+          message: "Internal server error",
+        };
+      }
+    }
     return {
-      status: 400,
-      message: "Incorrect OTP",
+      status: 200,
+      message: "success",
     };
   }
 
-  (await cookies()).set("tempData", JSON.stringify({ ...parseData, otp }), {
-    httpOnly: true,
-    maxAge: 600,
-    secure: true,
-    path: "/",
-  });
   return {
-    status: 200,
-    message: "success",
+    status: 400,
+    message: "Incorrect OTP",
   };
+
+  // (await cookies()).set("tempData", JSON.stringify({ ...parseData, otp }), {
+  //   httpOnly: true,
+  //   maxAge: 600,
+  //   secure: true,
+  //   path: "/",
+  // });
 };
