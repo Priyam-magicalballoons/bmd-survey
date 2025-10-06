@@ -10,6 +10,9 @@ generator client {
 model Coordinator {
   id        String    @id @default(uuid())
   campId    String    @unique
+  name      String
+  empId     String?
+  address   String
   patients  Patient[]
   doctor    Doctor?
   isActive  Boolean   @default(true)

@@ -5,6 +5,26 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/prisma/client";
 
+export const saveUser = async (id: string, campId: string) => {
+  const token = await jwt.sign(
+    { id: id, campId: campId },
+    process.env.JWT_SECRET as string
+  );
+
+  if (token) {
+    (await cookies()).set("user", token);
+    return {
+      status: 200,
+      message: "Logged in successfully",
+    };
+  } else {
+    return {
+      status: 400,
+      message: "Internal server error",
+    };
+  }
+};
+
 export const AuthenticateUser = async (id: string) => {
   if (!id) {
     return {
@@ -26,30 +46,10 @@ export const AuthenticateUser = async (id: string) => {
     };
   }
 
-  if (!user.isActive) {
-    return {
-      status: 400,
-      message: "This camp is already closed.",
-    };
-  }
-
-  const token = await jwt.sign(
-    { id: user.id, campId: user.campId },
-    process.env.JWT_SECRET as string
-  );
-
-  if (token) {
-    (await cookies()).set("user", token);
-    return {
-      status: 200,
-      message: "User logged in succesfully",
-    };
-  } else {
-    return {
-      status: 400,
-      message: "Internal server error",
-    };
-  }
+  return {
+    status: 200,
+    message: JSON.stringify({ address: user.address, id: user.id }),
+  };
 };
 
 export const LogoutUser = async () => {
