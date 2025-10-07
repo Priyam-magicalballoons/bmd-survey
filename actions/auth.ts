@@ -46,6 +46,13 @@ export const AuthenticateUser = async (id: string) => {
     };
   }
 
+  if (!user.isActive) {
+    return {
+      status: 400,
+      message: "Camp is closed",
+    };
+  }
+
   return {
     status: 200,
     message: JSON.stringify({ address: user.address, id: user.id }),

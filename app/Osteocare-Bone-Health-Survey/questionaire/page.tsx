@@ -269,6 +269,7 @@ const page = () => {
         ...sessionData,
         ...questions,
         one: sessionData.otp,
+        startTime: sessionData.startTime,
       });
 
       if (

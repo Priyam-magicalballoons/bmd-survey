@@ -45,8 +45,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center pb-2 md:pb-32">
-      <div className="flex flex-col gap-12">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="flex flex-col gap-10 py-20">
         <div className="w-full flex items-center justify-center">
           <p className="text-center w-1/2 bg-white text-[#1693dc] text-xl font-semibold px-10 py-3 rounded-2xl font-arial">
             HOME
@@ -54,7 +54,7 @@ export default function Dashboard() {
         </div>
         <div className="flex-col md:flex-row flex gap-10">
           <Button
-            className="text-2xl md:text-4xl px-16 max-w-80 min-w-[47%] py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial cursor-pointer"
+            className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial cursor-pointer"
             onClick={() =>
               router.push("/Osteocare-Bone-Health-Survey/start-survey")
             }
@@ -63,12 +63,12 @@ export default function Dashboard() {
           </Button>
           <Button
             className="text-2xl md:text-4xl max-w-80 min-w-[48%] py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial cursor-pointer"
-            // onClick={handleCompleteCamp}
+            onClick={handleCompleteCamp}
           >
             COMPLETE CAMP
           </Button>
         </div>
-        <div></div>
+        <div className="px-10 py-6"></div>
       </div>
       {/* Header */}
       {/* <header className="bg-card border-b border-border">

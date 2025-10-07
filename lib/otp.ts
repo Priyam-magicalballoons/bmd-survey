@@ -5,8 +5,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { cookies } from "next/headers";
 import { decryptData, encryptData, hashData } from "./saveTempUserData";
-import { getTempData } from "./helpers";
-import { parse } from "path";
+import { getTempData, saveTempData } from "./helpers";
 
 export const generateOTP = async (phone: string) => {
   let otp = "";
@@ -131,13 +130,12 @@ export const verifyOTP = async (otp: string) => {
   }
   const parseData = JSON.parse(data);
 
-  console.log(parseData);
+  // console.log(parseData);
 
   const phone = hashData(parseData.mobile);
   const savedOTP = decryptData(parseData.one);
 
   const type = parseData.mslCode ? "doctor" : "patient";
-  console.log("type🍕🍕", type);
   if (savedOTP === otp) {
     if (type === "doctor") {
       const otpRecord = await prisma.otp.create({
@@ -149,6 +147,12 @@ export const verifyOTP = async (otp: string) => {
           message: "Internal server error",
         };
       }
+    } else {
+      saveTempData({
+        ...parseData,
+        otp: parseData.one,
+        start: new Date(Date.now()),
+      });
     }
     return {
       status: 200,

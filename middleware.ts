@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // ✅ Public routes (no auth required)
-const publicRoutes = ["/Osteocare-Bone-Health-Survey/login"];
+const publicRoutes = [
+  "/Osteocare-Bone-Health-Survey/login",
+  "/Osteocare-Bone-Health-Survey/reports",
+];
 
 // ✅ Paths to ignore (static files, Next.js internals, API routes)
 const ignoredPaths = ["/_next", "/favicon.ico", "/images", "/api"];
@@ -19,7 +22,7 @@ export function middleware(req: NextRequest) {
   // If visiting a public route
   if (publicRoutes.includes(pathname)) {
     // Logged-in user should be redirected to root
-    if (token) {
+    if (token && pathname !== "/Osteocare-Bone-Health-Survey/reports") {
       return NextResponse.redirect(
         new URL("/Osteocare-Bone-Health-Survey/", req.url)
       );

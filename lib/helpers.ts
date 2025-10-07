@@ -22,17 +22,19 @@ export const saveTempData = async ({
   mobile,
   regNo,
   otp,
+  start,
 }: {
   name?: string;
   mslCode?: string;
   mobile: string;
   regNo?: string;
   otp?: string;
+  start?: Date;
 }) => {
   if (!mobile) return;
   const saved = (await cookies()).set(
     "tempData",
-    JSON.stringify({ name, mslCode, regNo, mobile, one: otp }),
+    JSON.stringify({ name, mslCode, regNo, mobile, one: otp, start }),
     {
       httpOnly: true,
       maxAge: 600,
@@ -68,6 +70,7 @@ export const getTempData = async () => {
       name: parseData.name,
       type: "patient",
       otp: parseData.one || null,
+      startTime: parseData.start,
     };
   }
 };
@@ -122,12 +125,14 @@ export const completeCamp = async () => {
       message: "Unauthorised user",
     };
   }
+
   const response = await prisma.coordinator.update({
     where: {
       id: user.id,
     },
     data: {
       isActive: false,
+      endedAt: new Date(Date.now()),
     },
   });
 

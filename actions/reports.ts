@@ -16,7 +16,7 @@ export const getAllDataForExcel = async () => {
   const rows = coordinators.flatMap((c) =>
     c.patients.map((p) => ({
       doctor: c.doctor,
-      coordinator: { campId: c.campId },
+      coordinator: { campId: c.campId, name: c.name, endedAt: c.endedAt },
       patients: p,
       questionnaire: p.questionaire,
     }))

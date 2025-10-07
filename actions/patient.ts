@@ -24,6 +24,7 @@ interface PatientData {
   fracture_diagnosed: string;
   menopause: string;
   orthopaedic_surgeries: string;
+  startTime: Date;
   existing_medical_conditions: {
     copd: string;
     diabetes: string;
@@ -83,6 +84,8 @@ export const savePatient = async (data: PatientData) => {
             patientId: nextPatientId,
             number: encryptData(data.mobile), // must be unique at DB level
             coordinatorId: coordinator.id,
+            createdAt: data.startTime,
+            endedAt: new Date(Date.now()),
           },
         });
 
@@ -118,6 +121,7 @@ export const savePatient = async (data: PatientData) => {
       })
     );
 
+    (await cookies()).delete("tempData");
     return {
       status: 200,
       message: "Patient and questionnaire saved successfully",

@@ -17,6 +17,7 @@ model Coordinator {
   doctor    Doctor?
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
+  endedAt   DateTime?
 }
 
 model Doctor {
@@ -43,6 +44,7 @@ model Patient {
   coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   questionaire  Questionaire?
   createdAt     DateTime      @default(now())
+  endedAt       DateTime
 }
 
 model Questionaire {
