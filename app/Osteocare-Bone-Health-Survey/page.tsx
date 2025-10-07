@@ -63,7 +63,7 @@ export default function Dashboard() {
           </Button>
           <Button
             className="text-2xl md:text-4xl max-w-80 min-w-[48%] py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial cursor-pointer"
-            onClick={handleCompleteCamp}
+            // onClick={handleCompleteCamp}
           >
             COMPLETE CAMP
           </Button>
