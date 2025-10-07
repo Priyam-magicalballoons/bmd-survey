@@ -46,7 +46,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen flex items-center justify-center md:pb-32">
-      <div className="flex flex-col gap-10 py-20">
+      <div className="flex flex-col gap-10 py-20 md:pt-44">
         <div className="w-full flex items-center justify-center">
           <p className="text-center w-1/2 bg-white text-[#1693dc] text-xl font-semibold px-10 py-3 rounded-2xl font-arial">
             HOME
