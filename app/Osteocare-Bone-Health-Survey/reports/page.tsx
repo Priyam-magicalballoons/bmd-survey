@@ -194,7 +194,7 @@ const page = () => {
         <thead>
           <tr className="text-center bg-gray-500">
             <th
-              colSpan={54}
+              colSpan={56}
               className="border px-3 border-black py-3 text- text-black bg-gray-400"
             >
               BMD PATIENT SURVEY ACTIVITY REPORT
@@ -231,6 +231,9 @@ const page = () => {
             <th className="px-3 border border-black" rowSpan={4}>
               Doctor OTP
             </th>
+            <th className="px-3 border border-black" rowSpan={4}>
+              Doctor IP Address
+            </th>
             <th className="px-3 border border-black min-w-28" rowSpan={4}>
               Start Date and Time
             </th>
@@ -248,6 +251,9 @@ const page = () => {
             </th>
             <th className="px-3 border border-black" rowSpan={4}>
               Patient OTP
+            </th>
+            <th className="px-3 border border-black" rowSpan={4}>
+              Patient IP Address
             </th>
             <th className="px-3 border border-black min-w-28" rowSpan={4}>
               Start Date and Time
@@ -535,6 +541,9 @@ const page = () => {
                 </td>
                 <td className="px-3 border border-black">{d.doctor.otp}</td>
                 <td className="px-3 border border-black">
+                  {d.doctor.ipAddress}
+                </td>
+                <td className="px-3 border border-black">
                   {format(new Date(d.doctor.createdAt), "dd-MM-yyyy HH:mm:ss")}
                 </td>
                 {d.coordinator.endedAt !== null ? (
@@ -557,6 +566,9 @@ const page = () => {
                   {decryptData(d.patients.number)}
                 </td>
                 <td className="px-3 border border-black">{d.patients.otp}</td>
+                <td className="px-3 border border-black">
+                  {d.patients.ipAddress}
+                </td>
                 <td className="px-3 border border-black">
                   {format(
                     new Date(d.patients.createdAt),

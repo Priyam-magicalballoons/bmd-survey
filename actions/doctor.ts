@@ -1,5 +1,5 @@
 "use server";
-import { getCampData } from "@/lib/helpers";
+import { getCampData, getIpAddress } from "@/lib/helpers";
 import { decryptData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import jwt from "jsonwebtoken";
@@ -39,6 +39,16 @@ export const saveDoctor = async () => {
       message: "Unable to save doctor. kindly try again",
     };
   }
+
+  const ipAddress = await getIpAddress();
+
+  if (!ipAddress) {
+    return {
+      status: 400,
+      message: "Internal server error",
+    };
+  }
+
   const parseData = JSON.parse(doctorData);
   const coordinatorId = (await getCampData()).id;
 
@@ -50,6 +60,7 @@ export const saveDoctor = async () => {
       number: parseData.mobile,
       registrationNumber: parseData.regNo,
       coordinatorId,
+      ipAddress,
     },
   });
 

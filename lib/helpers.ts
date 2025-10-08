@@ -147,6 +147,5 @@ export const completeCamp = async () => {
 export const getIpAddress = async () => {
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  console.log(ip);
   return ip;
 };

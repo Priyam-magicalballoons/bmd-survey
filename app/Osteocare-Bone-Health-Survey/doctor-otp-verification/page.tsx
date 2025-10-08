@@ -11,6 +11,7 @@ import { verifyOTP } from "@/lib/otp";
 import { getTempData } from "@/lib/helpers";
 import { useRouter } from "next/navigation";
 import { saveDoctor } from "@/actions/doctor";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function DoctorOTPVerificationPage() {
   const [otp, setOtp] = useState("");
@@ -19,6 +20,8 @@ export default function DoctorOTPVerificationPage() {
   const [mobile, setMobile] = useState<string>();
   const [type, setType] = useState("");
   const router = useRouter();
+  const [isAccepted, setIsAccepted] = useState(false);
+
   // const [doctorInfo, setDoctorInfo] = useState({
   //   name: "",
   //   mslCode: "",
@@ -166,7 +169,7 @@ export default function DoctorOTPVerificationPage() {
         </div>
         <div>
           <form onSubmit={handleVerifyOTP} className="space-y-4">
-            <div className="space-y-2 w-full flex items-center flex-col px-10 py-10">
+            <div className="space-y-2 w-full flex items-center flex-col px-10 pt-10 pb-5">
               <Label
                 htmlFor="username"
                 className="text-center py-2 text-xl font-arial"
@@ -187,11 +190,25 @@ export default function DoctorOTPVerificationPage() {
                 className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center"
               />
             </div>
+            <div className="flex flex-row gap-2 px-5 pb-5">
+              <input
+                type="checkbox"
+                id="accept"
+                className=" h-7 w-7"
+                onChange={() => setIsAccepted(!isAccepted)}
+                checked={isAccepted}
+              />
+              <Label htmlFor="accept">
+                {type === "doctor"
+                  ? "I hereby give my consent to conduct the survey for my patients."
+                  : "I agree to take part in this survey and provide my responses voluntarily."}
+              </Label>
+            </div>
             <div className="w-full flex items-center justify-center">
               <Button
                 type="submit"
                 className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
-                disabled={isLoading}
+                disabled={isLoading || !isAccepted}
               >
                 {isLoading ? "SUBMITTING..." : "SUBMIT"}
               </Button>

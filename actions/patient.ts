@@ -1,6 +1,6 @@
 "use server";
 
-import { withRetry } from "@/lib/helpers";
+import { getIpAddress, withRetry } from "@/lib/helpers";
 import { decryptData, encryptData, hashData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import { Prisma } from "@prisma/client";
@@ -66,9 +66,17 @@ export const savePatient = async (data: PatientData) => {
       "0"
     )}`;
 
+    const ipAddress = await getIpAddress();
+
+    if (!ipAddress) {
+      return {
+        status: 400,
+        message: "Internal server error",
+      };
+    }
+
     const result = await withRetry(async () =>
       prisma.$transaction(async (prismaTx) => {
-        // Always create a new patient (DB will enforce uniqueness on number)
         await prismaTx.otp.create({
           data: {
             phone: hashData(data.mobile!),
@@ -86,6 +94,7 @@ export const savePatient = async (data: PatientData) => {
             coordinatorId: coordinator.id,
             createdAt: data.startTime,
             endedAt: new Date(Date.now()),
+            ipAddress,
           },
         });
 
