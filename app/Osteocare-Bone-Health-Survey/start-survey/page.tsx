@@ -128,11 +128,11 @@ const page = () => {
           </Button>
         </div>
 
-        <div
-          className="w-full flex items-center justify-center"
-          onClick={() => router.replace("/")}
-        >
-          <Button className="text-center  bg-white text-[#1693dc] text-xl font-semibold px-10 py-6 rounded-2xl border border-[#1693dc] hover:bg-white hover:scale-105">
+        <div className="w-full flex items-center justify-center">
+          <Button
+            onClick={() => router.replace("/")}
+            className="text-center  bg-white text-[#1693dc] text-xl font-semibold px-10 py-6 rounded-2xl border border-[#1693dc] hover:bg-white hover:scale-105"
+          >
             HOME
           </Button>
         </div>

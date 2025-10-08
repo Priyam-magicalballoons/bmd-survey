@@ -190,20 +190,22 @@ export default function DoctorOTPVerificationPage() {
                 className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center"
               />
             </div>
-            <div className="flex flex-row gap-2 px-5 pb-5">
-              <input
-                type="checkbox"
-                id="accept"
-                className=" h-7 w-7"
-                onChange={() => setIsAccepted(!isAccepted)}
-                checked={isAccepted}
-              />
-              <Label htmlFor="accept">
-                {type === "doctor"
-                  ? "I hereby give my consent to conduct the survey for my patients."
-                  : "I agree to take part in this survey and provide my responses voluntarily."}
-              </Label>
-            </div>
+            {type && (
+              <div className="flex flex-row gap-2 px-5 pb-5">
+                <input
+                  type="checkbox"
+                  id="accept"
+                  className=" h-7 w-7"
+                  onChange={() => setIsAccepted(!isAccepted)}
+                  checked={isAccepted}
+                />
+                <Label htmlFor="accept">
+                  {type === "doctor"
+                    ? "I hereby give my consent to conduct the survey for my patients."
+                    : "I agree to take part in this survey and provide my responses voluntarily."}
+                </Label>
+              </div>
+            )}
             <div className="w-full flex items-center justify-center">
               <Button
                 type="submit"
