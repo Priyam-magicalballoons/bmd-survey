@@ -21,7 +21,7 @@ import {
 import { useRouter } from "next/navigation";
 import { LogoutUser } from "@/actions/auth";
 import { findDoctor } from "@/actions/doctor";
-import { completeCamp } from "@/lib/helpers";
+import { completeCamp, getIpAddress } from "@/lib/helpers";
 import { toast } from "sonner";
 
 export default function Dashboard() {
@@ -43,6 +43,10 @@ export default function Dashboard() {
       await LogoutUser();
     }
   };
+
+  useEffect(() => {
+    getIpAddress();
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center md:pb-32">

@@ -1,7 +1,7 @@
 "use server";
 
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { prisma } from "@/prisma/client";
 import { encryptData } from "./saveTempUserData";
 
@@ -142,4 +142,11 @@ export const completeCamp = async () => {
       message: "Camp closed successfully",
     };
   }
+};
+
+export const getIpAddress = async () => {
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  console.log(ip);
+  return ip;
 };
