@@ -124,6 +124,7 @@ export default function LoginPage() {
                   type="submit"
                   className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
                   disabled={isLoading}
+                  hidden={!!address}
                 >
                   {isLoading ? "SUBMITTING..." : "SUBMIT"}
                 </Button>
@@ -135,13 +136,13 @@ export default function LoginPage() {
 
       {address && (
         <div className="w-full flex items-center flex-col">
-          <p className="text-center">LOCATION</p>
-          <div className="bg-white w-80 border p-1 rounded-md text-sm text-center">
+          <p className="text-center pb-3">LOCATION</p>
+          <div className="bg-white w-80 border rounded-xl text-sm text-center p-3">
             {address}
           </div>
           <Button
             onClick={handleConfirm}
-            className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial mt-10"
+            className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial mt-5"
           >
             Confirm
           </Button>

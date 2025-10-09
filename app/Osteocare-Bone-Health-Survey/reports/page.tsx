@@ -148,7 +148,7 @@ const page = () => {
               : style.verticalAlign === "bottom"
               ? "bottom"
               : "top",
-          wrapText: true,
+          // wrapText: true,
         };
         excelCell.alignment = align;
 
@@ -162,13 +162,19 @@ const page = () => {
       }
     }
 
-    ws.columns.forEach((col) => {
+    ws.columns.forEach((col, index) => {
       let maxLength = 10;
-      col?.eachCell!({ includeEmpty: true }, (cell) => {
+      col.eachCell!({ includeEmpty: true }, (cell) => {
         const len = cell.value ? cell.value.toString().length : 0;
         if (len > maxLength) maxLength = len;
       });
-      col.width = maxLength;
+
+      // limit max width globally or per column
+      const maxWidth = 80;
+      const cappedWidth =
+        index === 3 ? Math.min(maxLength, 60) : Math.min(maxLength, maxWidth);
+
+      col.width = cappedWidth;
     });
 
     const buffer = await wb.xlsx.writeBuffer();
@@ -213,7 +219,7 @@ const page = () => {
             <th className="px-3 border border-black" rowSpan={4}>
               Employee Name
             </th>
-            <th className="px-3 border border-black" rowSpan={4}>
+            <th className="px-20 border border-black" rowSpan={4}>
               Camp location
             </th>
             <th className="px-3 border border-black" rowSpan={4}>
@@ -302,22 +308,6 @@ const page = () => {
             </th>
           </tr>
           <tr className="text-[12px]">
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
-
             <th className="px-3 border border-black" rowSpan={3}>
               Male
             </th>
@@ -327,15 +317,12 @@ const page = () => {
             <th className="px-3 border border-black" rowSpan={3}>
               Others
             </th>
-            {/* <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black" rowSpan={3}>
               Yes
             </th>
             <th className="px-3 border border-black" rowSpan={3}>
               No
             </th>
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black" colSpan={4}>
               COPD/ Asthma
             </th>
@@ -393,29 +380,6 @@ const page = () => {
             </th>
           </tr>
           <tr className="text-[12px]">
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black" rowSpan={2}>
               Yes
             </th>
@@ -448,79 +412,19 @@ const page = () => {
             <th className="px-3 border border-black" rowSpan={2}>
               Yes
             </th>
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
-            {/* <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black min-w-44" rowSpan={2}>
               Approximate Age when fracture was diagnosed? (in years){" "}
             </th>
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
           </tr>
           <tr className="text-[12px]">
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black">On regular medication</th>
             <th className="px-3 border border-black min-w-32">
               Not on regular medication
             </th>
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
             <th className="px-3 border border-black">On regular medication</th>
             <th className="px-3 border border-black min-w-32">
               Not on regular medication
             </th>
-            {/* <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th>
-            <th className="px-3 border border-black"></th> */}
           </tr>
           {data.map((d: any, index: number) => {
             return (
@@ -532,7 +436,9 @@ const page = () => {
                 <td className="px-3 border border-black">
                   {d.coordinator.name}
                 </td>
-                <td className="px-3 border border-black">Mumbai</td>
+                <td className="px-3 border border-black">
+                  {d.coordinator.location}
+                </td>
                 <td className="px-3 border border-black">{d.doctor.name}</td>
                 <td className="px-3 border border-black">{d.doctor.mslCode}</td>
                 <td className="px-3 border border-black">{d.doctor.number}</td>
