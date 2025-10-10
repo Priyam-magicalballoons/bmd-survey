@@ -219,7 +219,7 @@ const page = () => {
             <th className="px-3 border border-black" rowSpan={4}>
               Employee Name
             </th>
-            <th className="px-20 border border-black" rowSpan={4}>
+            <th className="px-32 border border-black truncate" rowSpan={4}>
               Camp location
             </th>
             <th className="px-3 border border-black" rowSpan={4}>
@@ -509,7 +509,7 @@ const page = () => {
                 <td className="px-3 border border-black">
                   {d.questionnaire.height}
                 </td>
-                {/* <td className="px-3 border border-black">
+                <td className="px-3 border border-black">
                   {d.questionnaire.copd === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
@@ -592,7 +592,7 @@ const page = () => {
                 </td>
                 <td className="px-3 border border-black">
                   {d.questionnaire.orthopaedicSurgeriesHistory === "no" && "✓"}
-                </td> */}
+                </td>
               </tr>
             );
           })}

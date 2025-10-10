@@ -584,25 +584,44 @@ const page = () => {
                     >
                       BMD T-SCORE
                     </Label>
-                    <Input
-                      id="bmd-score"
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="Patient BMD T-score"
-                      value={questions.bmd_score}
-                      onChange={(e) => {
-                        let value = e.target.value;
-                        value = value.replace(/[^0-9-.]/g, "");
-                        const parts = value.split(".");
-                        if (parts.length > 2) {
-                          value = parts[0] + "." + parts.slice(1).join("");
+                    <div className="flex gap-2 items-center">
+                      <Button
+                        type="button"
+                        className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl text-black font-bold hover:border-black hover:bg-gray-400/50 cursor-pointer"
+                        onClick={() =>
+                          setQuestions((prev) => ({
+                            ...prev,
+                            bmd_score: !prev.bmd_score.includes("-")
+                              ? prev.bmd_score + "-"
+                              : prev.bmd_score,
+                          }))
                         }
-                        value = value.slice(0, 10);
-                        setQuestions((prev) => ({ ...prev, bmd_score: value }));
-                      }}
-                      required
-                      className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
-                    />
+                      >
+                        -
+                      </Button>
+                      <Input
+                        id="bmd-score"
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="Patient BMD T-score"
+                        value={questions.bmd_score}
+                        onChange={(e) => {
+                          let value = e.target.value;
+                          value = value.replace(/[^0-9-.]/g, "");
+                          const parts = value.split(".");
+                          if (parts.length > 2) {
+                            value = parts[0] + "." + parts.slice(1).join("");
+                          }
+                          value = value.slice(0, 10);
+                          setQuestions((prev) => ({
+                            ...prev,
+                            bmd_score: value,
+                          }));
+                        }}
+                        required
+                        className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
+                      />
+                    </div>
                   </div>
                 </>
               )}
