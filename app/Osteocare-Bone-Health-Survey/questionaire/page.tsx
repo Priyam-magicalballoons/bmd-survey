@@ -10,10 +10,17 @@ import {
   getTempPatientData,
   saveTempPatientData,
 } from "@/lib/saveTempUserData";
-import { ArrowRight, Circle } from "lucide-react";
+import { ArrowRight, Circle, InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Errors = {
   [key: string]: string;
@@ -72,10 +79,11 @@ const page = () => {
     orthopaedic_surgeries: "",
   });
 
-  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [currentQuestion, setCurrentQuestion] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
+  const [isNegativeBMD, setIsNegativeBMD] = useState(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -270,6 +278,9 @@ const page = () => {
         ...questions,
         one: sessionData.otp,
         startTime: sessionData.startTime,
+        bmd_score: isNegativeBMD
+          ? `-${questions.bmd_score}`
+          : questions.bmd_score,
       });
 
       if (
@@ -325,28 +336,6 @@ const page = () => {
       router.push("/Osteocare-Bone-Health-Survey/start-survey");
     }
   };
-
-  // useEffect(() => {
-  //   const getSessionData = async () => {
-  //     const sessionData = await getTempData();
-  //     if (sessionData.status === 400) {
-  //       toast(sessionData.message, {
-  //         description: "Kindly try again.",
-  //         duration: 2000,
-  //         position: "top-center",
-  //         style: {
-  //           backgroundColor: "#fef2f2",
-  //           color: "#991b1b",
-  //           borderColor: "#fecaca",
-  //         },
-  //       });
-  //       setIsLoading(false);
-  //       router.push("/Osteocare-Bone-Health-Survey/add-patient");
-  //     }
-  //   };
-
-  //   getSessionData();
-  // }, [currentQuestion, handleSubmit]);
 
   return (
     <div className="flex min-h-screen max-h-screen justify-center overflow-y-scroll py-20 w-full">
@@ -577,28 +566,53 @@ const page = () => {
                       </RadioGroup>
                     </div>
                   )}
-                  <div className=" w-full flex  flex-col px-10">
+                  <div className=" w-full flex flex-col px-5 text-center">
                     <Label
                       htmlFor="bmd-score"
-                      className="py-2 text-xl pl-2 font-arial"
+                      className="py-2 text-xl pl-2 font-arial flex  justify-center"
                     >
                       BMD T-SCORE
                     </Label>
                     <div className="flex gap-2 items-center">
-                      <Button
-                        type="button"
-                        className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl text-black font-bold hover:border-black hover:bg-gray-400/50 cursor-pointer"
-                        onClick={() =>
-                          setQuestions((prev) => ({
-                            ...prev,
-                            bmd_score: !prev.bmd_score.includes("-")
-                              ? prev.bmd_score + "-"
-                              : prev.bmd_score,
-                          }))
+                      <Select
+                        onValueChange={(e) =>
+                          setIsNegativeBMD(e === "-" ? true : false)
                         }
                       >
-                        -
-                      </Button>
+                        <SelectTrigger className="">
+                          <SelectValue placeholder="select" />
+                        </SelectTrigger>
+                        <SelectContent className="max-w-20 min-w-20 hover: bg-transparent">
+                          <SelectItem
+                            value="select"
+                            // onClick={() => setIsNegativeBMD(true)}
+                            className=" bg-gray-100 
+                                hover:bg-gray-300 
+                                data-[highlighted]:bg-gray-200 
+                                data-[state=checked]:bg-gray-400
+                                data-[highlighted]:text-black 
+                                data-[state=checked]:text-black
+                                text-black
+                                flex items-center justify-center px-2"
+                          >
+                            select
+                          </SelectItem>
+                          <SelectItem
+                            value="-"
+                            // onClick={() => setIsNegativeBMD(false)}
+                            className=" bg-gray-100 
+                                hover:bg-gray-300 
+                                data-[highlighted]:bg-gray-200 
+                                data-[state=checked]:bg-gray-400
+                                data-[highlighted]:text-black 
+                                data-[state=checked]:text-black
+                                text-black
+                                flex items-center justify-center px-2"
+                          >
+                            -
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       <Input
                         id="bmd-score"
                         type="text"
@@ -623,6 +637,10 @@ const page = () => {
                       />
                     </div>
                   </div>
+                  <p className="px-2 flex items-center gap-1 text-gray-500 text-sm">
+                    <InfoIcon size={15} className="" />
+                    {`For negative values select (-) from dropdown`}
+                  </p>
                 </>
               )}
               {currentQuestion === 3 && (
