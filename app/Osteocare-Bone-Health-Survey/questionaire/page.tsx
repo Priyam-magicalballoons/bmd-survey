@@ -621,7 +621,7 @@ const page = () => {
                         value={questions.bmd_score}
                         onChange={(e) => {
                           let value = e.target.value;
-                          value = value.replace(/[^0-9-.]/g, "");
+                          value = value.replace(/[^0-9.]/g, "");
                           const parts = value.split(".");
                           if (parts.length > 2) {
                             value = parts[0] + "." + parts.slice(1).join("");
