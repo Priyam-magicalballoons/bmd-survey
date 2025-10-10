@@ -580,7 +580,7 @@ const page = () => {
                         }
                       >
                         <SelectTrigger className="">
-                          <SelectValue placeholder="select" />
+                          <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent className="max-w-20 min-w-20 hover: bg-transparent">
                           <SelectItem
@@ -595,7 +595,7 @@ const page = () => {
                                 text-black
                                 flex items-center justify-center px-2"
                           >
-                            select
+                            Select
                           </SelectItem>
                           <SelectItem
                             value="-"
