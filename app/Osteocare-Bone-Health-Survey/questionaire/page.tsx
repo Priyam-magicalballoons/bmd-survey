@@ -79,7 +79,7 @@ const page = () => {
     orthopaedic_surgeries: "",
   });
 
-  const [currentQuestion, setCurrentQuestion] = useState(2);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isLast, setIsLast] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
