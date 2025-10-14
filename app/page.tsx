@@ -10,7 +10,7 @@ const page = () => {
   }, []);
   return (
     <div className="h-screen w-full flex items-center justify-center">
-      <p className="mt-20 text-4xl font-bold">Loading...</p>
+      <p className="mt-20 text-4xl font-bold">Loading....</p>
     </div>
   );
 };
