@@ -21,8 +21,13 @@ export function middleware(req: NextRequest) {
 
   const token = req.cookies.get("user");
 
-  // If visiting a public route
+  if (token && pathname === "/Osteocare-Bone-Health-Survey/login") {
+    return NextResponse.redirect(
+      new URL("/Osteocare-Bone-Health-Survey/", req.url)
+    );
+  }
   if (publicRoutes.includes(pathname)) {
+    // If visiting a public route
     // Logged-in user should be redirected to root
     // if (token && pathname !== "/Osteocare-Bone-Health-Survey/reports") {
     //   return NextResponse.redirect(

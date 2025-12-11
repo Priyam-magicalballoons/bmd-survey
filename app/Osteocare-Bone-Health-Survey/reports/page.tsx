@@ -7,13 +7,20 @@ import React, { useEffect, useState } from "react";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Key, LockKeyhole, User2 } from "lucide-react";
+import { toast } from "sonner";
 
 const page = () => {
   const [data, setData] = useState<any>([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   useEffect(() => {
     const check = async () => {
       const response = await getAllDataForExcel();
-      console.log(response);
+      // console.log(response);
       setData(response);
     };
     check();
@@ -180,10 +187,81 @@ const page = () => {
     saveAs(new Blob([buffer]), fileName);
   }
 
+  useEffect(() => {
+    const lastLoggedInTime = sessionStorage.getItem("loggedInUserTime");
+    if (lastLoggedInTime) {
+      const parsedTime = JSON.parse(lastLoggedInTime!);
+      if (new Date(parsedTime).getTime() + 10 * 60 * 1000 > Date.now()) {
+        setLoggedIn(true);
+        sessionStorage.setItem("loggedInUserTime", JSON.stringify(Date.now()));
+      } else {
+        setLoggedIn(false);
+      }
+    }
+  }, []);
+
+  const handleLogin = () => {
+    if (!username || !password) {
+      toast.error("Kindly fill all the details.");
+      return;
+    }
+    if (username === "admin" && password === "admin") {
+      toast.success("Logged In Successfully");
+      setLoggedIn(true);
+      sessionStorage.setItem("loggedInUserTime", JSON.stringify(Date.now()));
+    } else {
+      toast.error("Invalid username or password");
+    }
+  };
+
+  if (!loggedIn) {
+    return (
+      <div
+        className=" h-screen w-full items-center justify-center flex bg-gray-100 px-5"
+        onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+      >
+        <div className="w-full md:w-1/2 lg:w-1/3 rounded-xl bg-white border-b-4 border-[#1792dd]">
+          <p className="text-center font-semibold text-xl h-10 bg-[#1792dd] rounded-t-xl items-center flex justify-center text-white ">
+            ADMIN LOGIN
+          </p>
+          <div className="mt-10 w-full flex items-center flex-col">
+            <div className="w-[80%] flex items-center justify-center flex-col gap-5">
+              <div className="flex flex-row items-center w-full relative">
+                <User2 className="absolute left-2" />
+                <Input
+                  placeholder="Enter username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="px-2 pl-10"
+                />
+              </div>
+              <div className="flex flex-row items-center w-full relative">
+                <LockKeyhole className="absolute left-2" />
+                <Input
+                  placeholder="Enter Password"
+                  value={password}
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="px-2 pl-10"
+                />
+              </div>
+              <Button
+                onClick={handleLogin}
+                className="bg-[#1792dd] my-10 w-full hover:bg-[#1792dd]/50 cursor-pointer"
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white overflow-scroll h-screen w-full p-10 max-w-full">
       {data && data.length > 0 && (
-        <div className="pb-10 pl-10 ">
+        <div className="pb-5 pl-10 ">
           <Button
             className="bg-black text-white hover:bg-black/50"
             onClick={() => exportTableToExcel("downloadTable")}
@@ -192,6 +270,9 @@ const page = () => {
           </Button>
         </div>
       )}
+      <p className="ml-10 font-semibold text-xl mb-3">
+        Total count : {data.length}
+      </p>
       <table
         className="border text-sm rounded-full overflow-x-scroll min-w-screen"
         id="downloadTable"
@@ -240,10 +321,10 @@ const page = () => {
               Doctor IP Address
             </th>
             <th className="px-3 border border-black min-w-28" rowSpan={4}>
-              Start Date and Time
+              Camp Start Date and Time
             </th>
             <th className="px-3 border border-black min-w-28" rowSpan={4}>
-              End Date and Time
+              Camp End Date and Time
             </th>
             <th className="px-3 border border-black" rowSpan={4}>
               Patient ID

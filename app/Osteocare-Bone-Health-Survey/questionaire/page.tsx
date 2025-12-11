@@ -199,6 +199,23 @@ const page = () => {
       return;
     } else if (
       isLast &&
+      questions.history_of_fractures.trim() === "yes" &&
+      parseInt(questions.fracture_diagnosed.trim()) < parseInt(questions.age)
+    ) {
+      toast("Invalid fracture diagnosed age", {
+        description:
+          "The age of fracture diagnosed cannot be less than person's current age",
+        duration: 2000,
+        position: "top-center",
+        style: {
+          backgroundColor: "#fef2f2",
+          color: "#991b1b",
+          borderColor: "#fecaca",
+        },
+      });
+      return;
+    } else if (
+      isLast &&
       (!questions.orthopaedic_surgeries ||
         (questions.history_of_fractures.trim() === "yes" &&
           !questions.fracture_diagnosed.trim()))
@@ -1368,7 +1385,10 @@ const page = () => {
 
                           if (value) {
                             let num = parseInt(value, 10);
-                            if (num < 1) num = 1;
+                            if (num < parseInt(questions.age))
+                              toast.error(
+                                "Age of fracture cannot be less than person's Age."
+                              );
                             if (num > 120) num = 120;
                             value = String(num);
                           } else {

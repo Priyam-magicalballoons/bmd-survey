@@ -42,7 +42,7 @@ model Patient {
   coordinatorId String
   otp           String
   ipAddress     String
-  patientId     String        @unique
+  patientId     String
   coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   questionaire  Questionaire?
   createdAt     DateTime      @default(now())
