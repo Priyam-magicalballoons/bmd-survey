@@ -113,8 +113,9 @@ export const withRetry = async <T>(
   );
 
   throw new Error(
-    "Unexpected retry error after all attempts",
-    lastError?.code || lastError
+    `Unexpected retry error with code ${
+      lastError?.code || lastError
+    } after all attempts`
   );
 };
 
