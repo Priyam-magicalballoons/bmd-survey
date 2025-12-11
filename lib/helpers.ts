@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { cookies, headers } from "next/headers";
 import { prisma } from "@/prisma/client";
 import { encryptData } from "./saveTempUserData";
+import { generateOTP } from "./otp";
 
 export const getCampData = async () => {
   const token = (await cookies()).get("user")?.value;
@@ -63,6 +64,8 @@ export const getTempData = async () => {
       mobile: parseData.mobile,
       type: "doctor",
       otp: parseData.one || null,
+      name: parseData.name,
+      reg: parseData.regNo,
     };
   } else {
     return {
@@ -134,7 +137,26 @@ export const completeCamp = async () => {
       isActive: false,
       endedAt: new Date(Date.now()),
     },
+    select: {
+      doctor: {
+        select: {
+          number: true,
+        },
+      },
+    },
   });
+
+  if (!response) {
+    return {
+      status: 400,
+      message: "Error is Closing Camp",
+    };
+  }
+
+  const sentThankyouMessage = await generateOTP(
+    response.doctor?.number!,
+    "Thankyou"
+  );
 
   if (response) {
     return {

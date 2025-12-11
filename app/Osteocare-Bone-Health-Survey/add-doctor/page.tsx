@@ -79,7 +79,7 @@ export default function AddDoctorPage() {
     //     },
     //   });
     // } else {
-    const otp = await generateOTP(doctorData.mobile);
+    const otp = await generateOTP(doctorData.mobile, "OTP", "Doctor");
     if (otp.status === 500 || otp.status === 400) {
       toast(otp.message, {
         position: "top-center",

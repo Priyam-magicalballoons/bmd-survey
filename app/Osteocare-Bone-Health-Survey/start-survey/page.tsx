@@ -36,7 +36,7 @@ const page = () => {
       return;
     }
     setDoctorData(doctor);
-    setLoaded(false);
+    setLoaded(true);
   };
 
   const getPatientCounts = async () => {
@@ -65,67 +65,77 @@ const page = () => {
         </div>
 
         <div className="flex-col md:flex-row flex gap-10">
-          <Button
-            className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 disabled:opacity-100  disabled:bg-gray-200 ${
-              doctorData && "cursor-not-allowed "
-            }`}
-            disabled={!!doctorData || !loaded}
-            onClick={() => {
-              if (!loaded) return;
-              router.push("/Osteocare-Bone-Health-Survey/add-doctor");
-            }}
-          >
-            <Image
-              src="/images/doctor.png"
-              className="-left-8 absolute h-44 -bottom-6"
-              alt=""
-              width={200}
-              height={100}
-            />
-            {doctorData ? (
-              <div className="absolute right-3 text-[#1693dc] text-[15px] md:text-xl md:max-w-44 text-left">
-                <p className="truncate">
-                  Name : {doctorData.name.split(" ")[0]}
-                </p>
-                <p className="truncate">Msl Code : {doctorData.mslCode}</p>
-                <p className="truncate">
-                  Reg. No : {doctorData.registrationNumber}
-                </p>
-                <p className="text-transparent">dummy</p>
-              </div>
-            ) : (
-              <>
-                <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
-                  ADD DOCTOR
-                </p>
-              </>
+          <div>
+            {(!!doctorData || !loaded) && (
+              <div className="absolute max-h-80 min-w-[316px] ml-[2px] rounded-2xl mt-[2px] bg-white h-48"></div>
             )}
-            <span className="absolute h-10 w-10 rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl">
-              {doctorData ? "01" : "00"}
-            </span>
-          </Button>
-          <Button
-            className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#d4fcfa] relative overflow-hidden border-2 border-[#143975] hover:bg-[#d4fcfa] hover:scale-105 cursor-pointer"
-            onClick={() => {
-              if (doctorData?.id === "id") return;
-              router.push("/Osteocare-Bone-Health-Survey/add-patient");
-            }}
-            disabled={!doctorData}
-          >
-            <Image
-              src="/images/girl.png"
-              className="left-2 absolute h-44 -bottom-5 "
-              alt=""
-              width={200}
-              height={100}
-            />
-            <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
-              ADD PATIENT
-            </p>
-            <span className="absolute h-10 w-10 rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl">
-              {patientCount < 9 ? `0${patientCount}` : patientCount || "00"}
-            </span>
-          </Button>
+            <Button
+              className={`text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#eff8f8] relative overflow-hidden border-2 border-[#143975] hover:bg-[#eff8f8] cursor-pointer hover:scale-105 z-10  ${
+                doctorData && "cursor-not-allowed "
+              }`}
+              disabled={!!doctorData || !loaded}
+              onClick={() => {
+                if (!loaded) return;
+                router.push("/Osteocare-Bone-Health-Survey/add-doctor");
+              }}
+            >
+              <Image
+                src="/images/doctor.png"
+                className="-left-8 absolute h-44 -bottom-6"
+                alt=""
+                width={200}
+                height={100}
+              />
+              {doctorData ? (
+                <div className="absolute right-3 text-[#1693dc] text-[15px] md:text-xl md:max-w-44 text-left">
+                  <p className="truncate">
+                    Name : {doctorData.name.split(" ")[0]}
+                  </p>
+                  <p className="truncate">Msl Code : {doctorData.mslCode}</p>
+                  <p className="truncate">
+                    Reg. No : {doctorData.registrationNumber}
+                  </p>
+                  <p className="text-transparent">dummy</p>
+                </div>
+              ) : (
+                <>
+                  <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
+                    ADD DOCTOR
+                  </p>
+                </>
+              )}
+              <span className="absolute h-10 w-10 rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl">
+                {doctorData ? "01" : "00"}
+              </span>
+            </Button>
+          </div>
+          <div>
+            {(!loaded || !doctorData) && (
+              <div className="absolute max-h-80 min-w-[316px] ml-[2px] rounded-2xl mt-[2px] bg-white h-48"></div>
+            )}
+            <Button
+              className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#d4fcfa] relative overflow-hidden border-2 border-[#143975] hover:bg-[#d4fcfa] hover:scale-105 cursor-pointer"
+              onClick={() => {
+                if (doctorData?.id === "id") return;
+                router.push("/Osteocare-Bone-Health-Survey/add-patient");
+              }}
+              disabled={!doctorData}
+            >
+              <Image
+                src="/images/girl.png"
+                className="left-2 absolute h-44 -bottom-5 "
+                alt=""
+                width={200}
+                height={100}
+              />
+              <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
+                ADD PATIENT
+              </p>
+              <span className="absolute h-10 w-10 rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl">
+                {patientCount < 9 ? `0${patientCount}` : patientCount || "00"}
+              </span>
+            </Button>
+          </div>
         </div>
 
         <div className="w-full flex items-center justify-center">

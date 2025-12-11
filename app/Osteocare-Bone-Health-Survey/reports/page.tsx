@@ -31,7 +31,6 @@ const page = () => {
       .toUpperCase();
   }
 
-  // 🔥 Utility: find nearest non-transparent background
   function findBackgroundColor(el: HTMLElement): string {
     let element: HTMLElement | null = el;
     while (element) {
@@ -428,34 +427,43 @@ const page = () => {
           </tr>
           {data.map((d: any, index: number) => {
             return (
-              <tr key={d.patients.id} className="text-center text-[12px]">
+              <tr key={d?.patients?.id} className="text-center text-[12px]">
                 <td className="px-3 border border-black">{index + 1}</td>
                 <td className="px-3 border border-black">
-                  {d.coordinator.campId}
+                  {d?.coordinator?.campId}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.coordinator.name}
+                  {d?.coordinator?.name}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.coordinator.location}
+                  {d?.coordinator?.location}
                 </td>
-                <td className="px-3 border border-black">{d.doctor.name}</td>
-                <td className="px-3 border border-black">{d.doctor.mslCode}</td>
-                <td className="px-3 border border-black">{d.doctor.number}</td>
+                <td className="px-3 border border-black">{d?.doctor?.name}</td>
                 <td className="px-3 border border-black">
-                  {d.doctor.registrationNumber}
-                </td>
-                <td className="px-3 border border-black">{d.doctor.otp}</td>
-                <td className="px-3 border border-black">
-                  {d.doctor.ipAddress}
+                  {d?.doctor?.mslCode}
                 </td>
                 <td className="px-3 border border-black">
-                  {format(new Date(d.doctor.createdAt), "dd-MM-yyyy HH:mm:ss")}
+                  {d?.doctor?.number}
                 </td>
-                {d.coordinator.endedAt !== null ? (
+                <td className="px-3 border border-black">
+                  {d?.doctor?.registrationNumber}
+                </td>
+                <td className="px-3 border border-black">{d?.doctor?.otp}</td>
+                <td className="px-3 border border-black">
+                  {d?.doctor?.ipAddress}
+                </td>
+                <td className="px-3 border border-black">
+                  {(d?.doctor?.createdAt &&
+                    format(
+                      new Date(d?.doctor?.createdAt),
+                      "dd-MM-yyyy HH:mm:ss"
+                    )) ||
+                    ""}
+                </td>
+                {d?.coordinator?.endedAt !== null ? (
                   <td className="px-3 border border-black">
                     {format(
-                      new Date(d.coordinator.endedAt),
+                      new Date(d?.coordinator?.endedAt),
                       "dd-MM-yyyy HH:mm:ss"
                     )}
                   </td>
@@ -463,135 +471,140 @@ const page = () => {
                   <td className="px-3 border border-black">ONGOING</td>
                 )}
                 <td className="px-3 border border-black">
-                  {d.patients.patientId}
+                  {d?.patients?.patientId}
                 </td>
                 <td className="px-3 border border-black">
-                  {decryptData(d.patients.name)}
+                  {decryptData(d?.patients?.name)}
                 </td>
                 <td className="px-3 border border-black">
-                  {decryptData(d.patients.number)}
+                  {decryptData(d?.patients?.number)}
                 </td>
-                <td className="px-3 border border-black">{d.patients.otp}</td>
+                <td className="px-3 border border-black">{d?.patients?.otp}</td>
                 <td className="px-3 border border-black">
-                  {d.patients.ipAddress}
+                  {d?.patients?.ipAddress}
                 </td>
                 <td className="px-3 border border-black">
                   {format(
-                    new Date(d.patients.createdAt),
+                    new Date(d?.patients?.createdAt),
                     "dd-MM-yyyy HH:mm:ss"
                   )}
                 </td>
                 <td className="px-3 border border-black">
-                  {format(new Date(d.patients.endedAt), "dd-MM-yyyy HH:mm:ss")}
+                  {format(
+                    new Date(d?.patients?.endedAt),
+                    "dd-MM-yyyy HH:mm:ss"
+                  )}
                 </td>
-                <td className="px-3 border border-black">{d.patients.age}</td>
+                <td className="px-3 border border-black">{d?.patients?.age}</td>
                 <td className="px-3 border border-black">
-                  {d.patients.gender === "male" && "✓"}
-                </td>
-                <td className="px-3 border border-black">
-                  {d.patients.gender === "female" && "✓"}
-                </td>
-                <td className="px-3 border border-black">
-                  {d.patients.gender === "other" && "✓"}
+                  {d?.patients?.gender === "male" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.bmdScore}
+                  {d?.patients?.gender === "female" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.Menopause === "yes" && "✓"}
+                  {d?.patients?.gender === "other" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.Menopause === "no" && "✓"}
+                  {d?.questionnaire?.bmdScore}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.weight}
+                  {d?.questionnaire?.Menopause === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.height}
+                  {d?.questionnaire?.Menopause === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.copd === "yes" && "✓"}
+                  {d?.questionnaire?.weight}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.copdMedication === "yes" && "✓"}
+                  {d?.questionnaire?.height}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.copdMedication === "no" && "✓"}
+                  {d?.questionnaire?.copd === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.copd === "no" && "✓"}
+                  {d?.questionnaire?.copdMedication === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.kneeOsteoarthritis === "yes" && "✓"}
+                  {d?.questionnaire?.copdMedication === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.kneeOsteoarthritis === "no" && "✓"}
+                  {d?.questionnaire?.copd === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.diabetes === "yes" && "✓"}
+                  {d?.questionnaire?.kneeOsteoarthritis === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.diabetes === "no" && "✓"}
+                  {d?.questionnaire?.kneeOsteoarthritis === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.epilepsy === "yes" && "✓"}
+                  {d?.questionnaire?.diabetes === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.epilepsyMedication === "yes" && "✓"}
+                  {d?.questionnaire?.diabetes === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.epilepsyMedication === "no" && "✓"}
+                  {d?.questionnaire?.epilepsy === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.epilepsy === "no" && "✓"}
+                  {d?.questionnaire?.epilepsyMedication === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.hypertension === "yes" && "✓"}
+                  {d?.questionnaire?.epilepsyMedication === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.hypertension === "no" && "✓"}
+                  {d?.questionnaire?.epilepsy === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.diet === "vegetarian" && "✓"}
+                  {d?.questionnaire?.hypertension === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.diet === "Vegan" && "✓"}
+                  {d?.questionnaire?.hypertension === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.diet === "Non-vegetarian" && "✓"}
+                  {d?.questionnaire?.diet === "vegetarian" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.smoking === "yes" && "✓"}
+                  {d?.questionnaire?.diet === "Vegan" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.smoking === "no" && "✓"}
+                  {d?.questionnaire?.diet === "Non-vegetarian" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.tobacco === "yes" && "✓"}
+                  {d?.questionnaire?.smoking === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.tobacco === "no" && "✓"}
+                  {d?.questionnaire?.smoking === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.alcohol === "yes" && "✓"}
+                  {d?.questionnaire?.tobacco === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.alcohol === "no" && "✓"}
+                  {d?.questionnaire?.tobacco === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.historyOfFractures === "yes" && "✓"}
+                  {d?.questionnaire?.alcohol === "yes" && "✓"}
+                </td>
+                <td className="px-3 border border-black">
+                  {d?.questionnaire?.alcohol === "no" && "✓"}
+                </td>
+                <td className="px-3 border border-black">
+                  {d?.questionnaire?.historyOfFractures === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black text-center">
-                  {d.questionnaire.fractureAge}
+                  {d?.questionnaire?.fractureAge}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.historyOfFractures === "no" && "✓"}
+                  {d?.questionnaire?.historyOfFractures === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.orthopaedicSurgeriesHistory === "yes" && "✓"}
+                  {d?.questionnaire?.orthopaedicSurgeriesHistory === "yes" &&
+                    "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d.questionnaire.orthopaedicSurgeriesHistory === "no" && "✓"}
+                  {d?.questionnaire?.orthopaedicSurgeriesHistory === "no" &&
+                    "✓"}
                 </td>
               </tr>
             );

@@ -11,7 +11,16 @@ import { verifyOTP } from "@/lib/otp";
 import { getTempData } from "@/lib/helpers";
 import { useRouter } from "next/navigation";
 import { saveDoctor } from "@/actions/doctor";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { format } from "date-fns";
 
 export default function DoctorOTPVerificationPage() {
   const [otp, setOtp] = useState("");
@@ -20,39 +29,19 @@ export default function DoctorOTPVerificationPage() {
   const [mobile, setMobile] = useState<string>();
   const [type, setType] = useState("");
   const router = useRouter();
-  const [isAccepted, setIsAccepted] = useState(false);
-
-  // const [doctorInfo, setDoctorInfo] = useState({
-  //   name: "",
-  //   mslCode: "",
-  //   mobile: "",
-  //   regNo: "",
-  // });
-
-  // useEffect(() => {
-  //   const sendOTP = async () => {
-  //     await generateOTP();
-  //   };
-  //   sendOTP();
-  // }, []);
-
-  // useEffect(() => {
-  //   // Get doctor info from URL params
-  //   const params = new URLSearchParams(window.location.search);
-  //   setDoctorInfo({
-  //     name: params.get("doctorName") || "",
-  //     mslCode: params.get("mslCode") || "",
-  //     mobile: params.get("mobile") || "",
-  //     regNo: params.get("regNo") || "",
-  //   });
-  // }, []);
+  const [name, setName] = useState("");
+  const [regNo, setRegNo] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const findMobile = async () => {
       const doctorData = await getTempData();
       if (doctorData?.type === "doctor") {
+        setName(doctorData.name);
+        setRegNo(doctorData.reg);
         setType("doctor");
       } else {
+        setName(doctorData.name);
         setType("patient");
       }
       if (!doctorData)
@@ -60,6 +49,19 @@ export default function DoctorOTPVerificationPage() {
     };
     findMobile();
   }, []);
+
+  const handleDecline = () => {
+    toast("Cannot create doctor.", {
+      duration: 2000,
+      position: "top-center",
+      style: {
+        backgroundColor: "#fef2f2",
+        color: "#991b1b",
+        borderColor: "#fecaca",
+      },
+    });
+    router.push("/Osteocare-Bone-Health-Survey/start-survey");
+  };
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,175 +191,131 @@ export default function DoctorOTPVerificationPage() {
                 required
                 className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center"
               />
-            </div>
-            {type && (
-              <div className="flex flex-row gap-2 px-5 pb-5">
-                <input
-                  type="checkbox"
-                  id="accept"
-                  className=" h-7 w-7"
-                  onChange={() => setIsAccepted(!isAccepted)}
-                  checked={isAccepted}
-                />
-                <Label htmlFor="accept">
-                  {type === "doctor"
-                    ? "I hereby give my consent to conduct the survey for my patients."
-                    : "I agree to take part in this survey and provide my responses voluntarily."}
-                </Label>
-              </div>
-            )}
-            <div className="w-full flex items-center justify-center">
               <Button
                 type="submit"
-                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
-                disabled={isLoading || !isAccepted}
+                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial mt-5"
+                disabled={isLoading}
               >
                 {isLoading ? "SUBMITTING..." : "SUBMIT"}
               </Button>
             </div>
+            {/* <div className="w-full flex items-center justify-center">
+              <Dialog open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
+                <DialogTrigger>
+                  <Button
+                    type="button"
+                    className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "SUBMITTING..." : "SUBMIT"}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-h-[80%] overflow-y-auto sm:-ml-2">
+                  <DialogHeader>
+                    <DialogTitle className="text-center w-full">
+                      {type === "doctor" ? "DOCTOR" : "PATIENT"} CONSENT LETTER
+                    </DialogTitle>
+                    <DialogDescription>
+                      <pre className="text-right">
+                        Date : {format(new Date(), "dd-MM-yyyy")}
+                      </pre>
+                      {type === "doctor" ? (
+                        <pre className="float-start text-left text-wrap">
+                          <code>
+                            {`
+To,
+Cipla Limited,
+Peninsula Business Park
+Ganpatrao Kadam Marg
+Lower Parel
+Mumbai - 400013
+
+Subject: Consent for study conduction
+
+Study: “A Nationwide Study on Epidemiology & Risk Factors of Osteopenia &/or Osteoporosis”
+
+(Please read the consent form carefully before signing this consent letter)
+
+I, Dr. ${name}, currently residing at ____________________, holding registration number ${regNo}, hereby give my consent to Cipla Limited, through its employees, affiliates, or authorized representatives/consultants, including the designated vendor, to collect my personal data such as my name, city, registration number, & any other necessary information (“Personal Information”) for the purpose of conducting the above-mentioned study on screening for Osteopenia/Osteoporosis & related risk factors.
+
+I understand & grant permission to Cipla Limited to enroll my patients in this study to help assess the prevalence of Osteopenia/Osteoporosis & associated risk factors. The analysis derived from this study will be used for educational & awareness purposes among healthcare professionals & patients. All data will be anonymized & analysed & may be submitted, published, or presented in medical journals or conferences.
+
+It is clarified that Cipla Limited will not disclose my personally identifiable information to any third party for commercial purposes, except as stated above. I understand that my Personal Information will be processed & protected by Cipla Limited. Further details regarding the use, storage, & retention of my Personal Information can be obtained by contacting Cipla at globalprivacy@cipla.com.
+
+This study does not involve the promotion of Cipla products or any form of consideration or commercial interest. I confirm that I have not received any consideration to promote any Cipla products.
+
+I confirm that I have read & fully understood the study documents & contents of this letter. I hereby consent to participate in this study & authorize the recording, collection, storage, processing, sharing, & use of my personal data & that of my patients in relation to the Osteocare BMD Screening Camp facilitated by the vendor on behalf of Cipla Limited for the purposes of this study.
+
+(In the event this document is translated into any other language, the English version shall prevail.)
+
+Yours Sincerely,
+
+Signature & Seal
+Name: ${name}
+Reg. No.: ${regNo}
+Speciality: 
+Clinic/ Hospital Name:
+`}
+                          </code>
+                        </pre>
+                      ) : (
+                        <pre className="text-wrap">
+                          {`To,
+Cipla House
+Peninsula Business Park
+Ganpatrao Kadam Marg
+Lower Parel
+Mumbai - 400013
+
+Subject: Consent for study participation
+
+Study: “A Nationwide Study on Epidemiology & Risk Factors of Osteopenia and/or Osteoporosis”
+
+(Please read the consent form carefully before signing this consent letter)
+
+I, the undersigned, hereby state as follows:
+
+I give my consent to Cipla Limited, through its employees, affiliates, or authorized representatives/consultants, including the designated vendor, to collect my personal data such as my name, age, gender, and any other necessary information (“Personal Information”) for the purpose of conducting the above-mentioned study on screening for Osteopenia/Osteoporosis and related risk factors.
+
+I grant permission to participate in this study and authorize Cipla Limited to use the information shared by me to understand the prevalence of Osteopenia/Osteoporosis in India. The analysis of this data will be used for educational and awareness purposes. All data will be anonymized, analysed and may be submitted, published, or presented in medical journals or conferences.
+
+It is clarified that Cipla Limited will not disclose my personally identifiable information to any third party for commercial purposes, except as stated above.
+
+It is clarified that Cipla Limited will not disclose my personally identifiable information to any third party for commercial purposes, except as stated above.
+
+I confirm that I have read and fully understood the contents of this Privacy Notice. I hereby consent to the recording, collection, storage, processing, sharing, and use of my personal data in relation to the Osteocare BMD Screening Camp facilitated by the vendor on behalf of Cipla Limited for the purposes of this study.
+
+(In the event this document is translated into any other language, the English version shall prevail.)
+
+${name}
+Name/patient ID & Signature
+`}
+                        </pre>
+                      )}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-row items-center !justify-around w-full">
+                    <Button
+                      variant={"outline"}
+                      className="cursor-pointer min-w-32 max-w-32 hover:bg-white hover:text-black"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant={"outline"}
+                      className="bg-emerald-500 text-white hover:bg-emerald-500/70 cursor-pointer min-w-32 max-w-32"
+                      onClick={handleVerifyOTP}
+                    >
+                      Accept
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div> */}
           </form>
         </div>
       </div>
-      {/* Header */}
-      {/* <header className="bg-card border-b border-border">
-        <div className="max-w-4xl mx-auto sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBack}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              <span className="hidden md:flex">Back</span>
-            </Button>
-            <div className="flex items-center space-x-3">
-              <div className="bg-primary/10 p-2 rounded-lg">
-                <Shield className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-lg font-semibold text-foreground">
-                  Doctor OTP Verification
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Verify doctor's mobile number
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header> */}
-      {/* <div>{mobile && mobile}</div> */}
-      {/* Main Content */}
-      {/* <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="border-border/50 shadow-lg">
-          <CardHeader>
-            <div className="text-center space-y-2">
-              <div className="bg-primary/10 p-3 rounded-full w-fit mx-auto">
-                <Shield className="h-8 w-8 text-primary" />
-              </div>
-              <CardTitle className="text-2xl">Verify Doctor</CardTitle>
-              <CardDescription>
-                An OTP has been sent to the doctor's mobile number for
-                verification
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            
-            <div className="bg-muted/50 p-4 rounded-lg space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Doctor Name:
-                </span>
-                <span className="text-sm font-medium">{doctorInfo.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">MSL Code:</span>
-                <span className="text-sm font-medium">
-                  {doctorInfo.mslCode}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Mobile:</span>
-                <span className="text-sm font-medium">{maskedMobile}</span>
-              </div>
-            </div>
-
-            
-            <form onSubmit={handleVerifyOTP} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="otp" className="text-center block">
-                  Enter OTP
-                </Label>
-                <Input
-                  id="otp"
-                  type="text"
-                  placeholder="Enter 4-6 digit OTP"
-                  value={otp}
-                  onChange={(e) => {
-                    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-                    setOtp(value);
-                  }}
-                  required
-                  className="bg-input border-border text-center text-lg tracking-widest"
-                  maxLength={6}
-                />
-                <p className="text-sm text-muted-foreground text-center">
-                  Please enter the OTP sent to {maskedMobile}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                  disabled={isLoading || otp.length < 4}
-                >
-                  {isLoading ? (
-                    <>
-                      <CheckCircle className="h-4 w-4 mr-2 animate-spin" />
-                      Verifying OTP...
-                    </>
-                  ) : (
-                    "Verify OTP"
-                  )}
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full bg-transparent"
-                  onClick={handleResendOTP}
-                  disabled={isResending}
-                >
-                  {isResending ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                      Resending...
-                    </>
-                  ) : (
-                    "Resend OTP"
-                  )}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-
-        
-        <Card className="mt-6 bg-muted/50 border-border/50">
-          <CardContent className="pt-6">
-            <div className="text-center space-y-2">
-              <h3 className="font-medium text-foreground">Need Help?</h3>
-              <p className="text-sm text-muted-foreground">
-                If you haven't received the OTP, please check your mobile
-                network and try resending.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </main> */}
     </div>
   );
 }

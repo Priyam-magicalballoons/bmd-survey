@@ -7,7 +7,11 @@ import { cookies } from "next/headers";
 import { decryptData, encryptData, hashData } from "./saveTempUserData";
 import { getTempData, saveTempData } from "./helpers";
 
-export const generateOTP = async (phone: string) => {
+export const generateOTP = async (
+  phone: string,
+  type?: "OTP" | "Thankyou",
+  to?: "Doctor" | "Patient"
+) => {
   let otp = "";
   for (let i = 0; i < 6; i++) {
     otp += Math.floor(Math.random() * 10);
@@ -65,9 +69,43 @@ export const generateOTP = async (phone: string) => {
   // console.log(otp);
   // return true;
 
-  const msg = `Your OTP for Participation in Bone Health Survey is ${otp}   
+  //   const msg = `Your OTP for Consent for conducting Cipla's Bone Health Survey at your clinic is ${otp} To know more please click on the link: https://tinyurl.com/4tzwdf8j
+  // Regards,
+  // Magical Balloons
+  // `;
+
+  // const msg = `Your OTP for Consent for conducting Cipla's Bone Health Survey at your clinic is ${otp} To know more please click on the link: https://doctorcrm.in/BMD/Pt_Consent.html
+  // Regards,
+  // Magical Balloons
+  // `;
+
+  //   const msg = `Your OTP for Consent for participating in Cipla's Bone Health Survey is ${otp}.
+  // To view the consent form and privacy policy please click here: https://doctorcrm.in/BMD/Pt_Consent.html
+
+  // Regards,
+  // Magical Balloons
+  // `;
+
+  const msg =
+    type === "OTP"
+      ? to === "Doctor"
+        ? `Your OTP for Consent for conducting Cipla's Bone Health Survey at your clinic is ${otp} To know more please click on the link: https://doctorcrm.in/BMD/Dr_Consent.html
+        
 Regards,
-Cipla`;
+Magical Balloons 
+ 
+`
+        : `Your OTP for Consent for participating in Cipla's Bone Health Survey is ${otp} 
+To view the consent form and privacy policy please click here: https://doctorcrm.in/BMD/Pt_Consent.html
+
+Regards,
+Magical Balloons
+`
+      : `Thank you for partnering with Cipla for conducting the Bone Health Survey at your clinic.
+      
+Regards,
+Magical Balloons 
+`;
 
   const res = await fetch("http://sms.magicalballoons.co.in/REST/sendsms/", {
     method: "POST",
@@ -83,7 +121,12 @@ Cipla`;
           clientsmsid: "+918451938833",
           accountusagetypeid: "1",
           entityid: "1201159145178998125",
-          tempid: "1207160881177758371",
+          tempid:
+            type === "OTP"
+              ? to === "Doctor"
+                ? "1207176432573057799"
+                : "1207176432861265762"
+              : "1207176457959989457",
         },
       ],
       password: "b9d1b575f6XX",

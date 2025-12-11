@@ -21,15 +21,17 @@ import {
 import { useRouter } from "next/navigation";
 import { LogoutUser } from "@/actions/auth";
 import { findDoctor } from "@/actions/doctor";
-import { completeCamp, getIpAddress } from "@/lib/helpers";
+import { completeCamp, getIpAddress, getTempData } from "@/lib/helpers";
 import { toast } from "sonner";
+import { generateOTP } from "@/lib/otp";
 
 export default function Dashboard() {
   const router = useRouter();
 
   const handleCompleteCamp = async () => {
-    const resposne = await completeCamp();
-    toast(resposne?.message, {
+    const response = await completeCamp();
+
+    toast.success(response?.message, {
       duration: 2000,
       position: "top-center",
       style: {
@@ -39,7 +41,7 @@ export default function Dashboard() {
       },
     });
 
-    if (resposne?.status === 200) {
+    if (response?.status === 200) {
       await LogoutUser();
     }
   };
@@ -67,7 +69,7 @@ export default function Dashboard() {
           </Button>
           <Button
             className="text-2xl md:text-4xl max-w-80 min-w-[48%] py-20 md:py-24 rounded-2xl bg-[#143975] hover:bg-[#102060] font-arial cursor-pointer"
-            // onClick={handleCompleteCamp}
+            onClick={handleCompleteCamp}
           >
             COMPLETE CAMP
           </Button>

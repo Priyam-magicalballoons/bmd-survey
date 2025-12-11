@@ -585,9 +585,8 @@ const page = () => {
                         <SelectContent className="max-w-20 min-w-20 hover: bg-transparent">
                           <SelectItem
                             value="select"
-                            // onClick={() => setIsNegativeBMD(true)}
                             className=" bg-gray-100 
-                                hover:bg-gray-300 
+                                hover:bg-gray-300                                 
                                 data-[highlighted]:bg-gray-200 
                                 data-[state=checked]:bg-gray-400
                                 data-[highlighted]:text-black 
@@ -599,7 +598,6 @@ const page = () => {
                           </SelectItem>
                           <SelectItem
                             value="-"
-                            // onClick={() => setIsNegativeBMD(false)}
                             className=" bg-gray-100 
                                 hover:bg-gray-300 
                                 data-[highlighted]:bg-gray-200 

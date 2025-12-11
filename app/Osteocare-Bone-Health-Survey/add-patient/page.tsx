@@ -47,7 +47,7 @@ export default function AddDoctorPage() {
       return;
     }
 
-    const otp = await generateOTP(patientData.mobile);
+    const otp = await generateOTP(patientData.mobile, "OTP", "Patient");
     if (otp.status === 500 || otp.status === 400) {
       toast(otp.message, {
         position: "top-center",
