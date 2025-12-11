@@ -200,7 +200,7 @@ const page = () => {
     } else if (
       isLast &&
       questions.history_of_fractures.trim() === "yes" &&
-      parseInt(questions.fracture_diagnosed.trim()) >= parseInt(questions.age)
+      parseInt(questions.fracture_diagnosed.trim()) > parseInt(questions.age)
     ) {
       toast("Invalid fracture diagnosed age", {
         description:
@@ -1385,7 +1385,7 @@ const page = () => {
 
                           if (value) {
                             let num = parseInt(value, 10);
-                            if (num >= parseInt(questions.age))
+                            if (num > parseInt(questions.age))
                               toast.error(
                                 "Age of fracture cannot be greater than person's Age."
                               );
