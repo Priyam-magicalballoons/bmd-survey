@@ -107,11 +107,15 @@ export const withRetry = async <T>(
     }
   }
 
-  console.error(
+  console.log(
     `🔴 All ${retries} attempts failed. Last error:`,
     lastError?.code || lastError
   );
-  throw new Error("Unexpected retry error after all attempts");
+
+  throw new Error(
+    "Unexpected retry error after all attempts",
+    lastError?.code || lastError
+  );
 };
 
 export const completeCamp = async () => {
