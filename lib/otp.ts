@@ -17,25 +17,26 @@ export const generateOTP = async (
     otp += Math.floor(Math.random() * 10);
   }
 
-  try {
-    const phoneExists = await prisma.otp.findUnique({
-      where: {
-        phone: hashData(phone),
-      },
-    });
-    if (phoneExists) {
+  if (type === "OTP") {
+    try {
+      const phoneExists = await prisma.otp.findUnique({
+        where: {
+          phone: hashData(phone),
+        },
+      });
+      if (phoneExists) {
+        return {
+          status: 500,
+          message: "Number already exists",
+        };
+      }
+    } catch (error: any) {
       return {
         status: 500,
-        message: "Number already exists",
+        message: error.message,
       };
     }
-  } catch (error: any) {
-    return {
-      status: 500,
-      message: error.message,
-    };
   }
-
   // try {
   //   const saveToDb = await prisma.otp.create({
   //     data: {
