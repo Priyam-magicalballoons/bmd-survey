@@ -6,6 +6,7 @@ const publicRoutes = [
   "/Osteocare-Bone-Health-Survey/doctor-consent-form",
   "/Osteocare-Bone-Health-Survey/patient-consent-form",
   "/Osteocare-Bone-Health-Survey/reports",
+  "/Osteocare-Bone-Health-Survey/thank-you",
 ];
 
 // ✅ Paths to ignore (static files, Next.js internals, API routes)

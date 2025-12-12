@@ -61,5 +61,5 @@ export const AuthenticateUser = async (id: string) => {
 
 export const LogoutUser = async () => {
   (await cookies()).delete("user");
-  redirect("/");
+  redirect("/Osteocare-Bone-Health-Survey/thank-you");
 };

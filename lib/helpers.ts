@@ -3,7 +3,7 @@
 import jwt from "jsonwebtoken";
 import { cookies, headers } from "next/headers";
 import { prisma } from "@/prisma/client";
-import { encryptData } from "./saveTempUserData";
+// import { encryptData } from "./saveTempUserData";
 import { generateOTP } from "./otp";
 
 export const getCampData = async () => {
@@ -38,7 +38,7 @@ export const saveTempData = async ({
     JSON.stringify({ name, mslCode, regNo, mobile, one: otp, start }),
     {
       httpOnly: true,
-      maxAge: 600,
+      // maxAge: 600,
       secure: true,
       path: "/",
     }
@@ -148,8 +148,26 @@ export const completeCamp = async () => {
           number: true,
         },
       },
+      _count: true,
+      campId: true,
     },
   });
+
+  console.log(response);
+
+  (await cookies()).set(
+    "thank-you-data",
+    JSON.stringify({
+      campId: response.campId,
+      patientCount: response._count.patients,
+    }),
+    {
+      httpOnly: true,
+      maxAge: 86400 * 2,
+      secure: true,
+      path: "/",
+    }
+  );
 
   if (!response) {
     return {
@@ -158,15 +176,25 @@ export const completeCamp = async () => {
     };
   }
 
-  const sentThankyouMessage = await generateOTP(
-    response.doctor?.number!,
-    "Thankyou"
-  );
+  await generateOTP(response.doctor?.number!, "Thankyou");
 
   if (response) {
     return {
       status: 200,
       message: "Camp closed successfully",
+    };
+  }
+};
+
+export const getThankYouData = async () => {
+  const data = (await cookies()).get("thank-you-data")?.value as any;
+  if (data) {
+    const parsedData = JSON.parse(data);
+    return parsedData;
+  } else {
+    return {
+      status: 400,
+      message: "Error in getting data",
     };
   }
 };
