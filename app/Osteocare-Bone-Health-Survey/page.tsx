@@ -31,15 +31,27 @@ export default function Dashboard() {
   const handleCompleteCamp = async () => {
     const response = await completeCamp();
 
-    toast.success(response?.message, {
-      duration: 2000,
-      position: "top-center",
-      style: {
-        backgroundColor: "#fef2f2",
-        color: "#991b1b",
-        borderColor: "#fecaca",
-      },
-    });
+    if (response?.status === 200) {
+      toast(response?.message, {
+        duration: 2000,
+        position: "top-center",
+        style: {
+          backgroundColor: "#f0fdf4",
+          color: "#166534",
+          borderColor: "#bbf7d0",
+        },
+      });
+    } else {
+      toast(response?.message, {
+        duration: 2000,
+        position: "top-center",
+        style: {
+          backgroundColor: "#fef2f2",
+          color: "#991b1b",
+          borderColor: "#fecaca",
+        },
+      });
+    }
 
     if (response?.status === 200) {
       await LogoutUser();
