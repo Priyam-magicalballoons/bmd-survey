@@ -6,10 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { getTempData } from "@/lib/helpers";
-import {
-  getTempPatientData,
-  saveTempPatientData,
-} from "@/lib/saveTempUserData";
 import { ArrowRight, Circle, InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
@@ -123,6 +119,7 @@ const page = () => {
     setErrors(errors);
     return errors;
   };
+
   const handleNext = (e: React.FormEvent) => {
     if (
       currentQuestion === 1 &&
@@ -308,7 +305,6 @@ const page = () => {
         savePatientData.status === 401
       ) {
         // Save unsaved patient data in localStorage
-        saveTempPatientData({ ...sessionData, ...questions });
 
         toast(savePatientData?.message, {
           description: "Kindly try again.",
@@ -322,7 +318,7 @@ const page = () => {
         });
 
         setIsLoading(false);
-        router.push("/Osteocare-Bone-Health-Survey/start-survey");
+        // router.push("/Osteocare-Bone-Health-Survey/start-survey");
         return;
       } else {
         toast(savePatientData?.message, {
@@ -337,8 +333,8 @@ const page = () => {
 
         return router.push("/Osteocare-Bone-Health-Survey/start-survey");
       }
-    } catch (error) {
-      toast("Unexpected error occurred", {
+    } catch (error: any) {
+      toast(error || "Internal server Error", {
         description: "Kindly try again.",
         duration: 2000,
         position: "top-center",
@@ -350,7 +346,7 @@ const page = () => {
       });
 
       setIsLoading(false);
-      router.push("/Osteocare-Bone-Health-Survey/start-survey");
+      // router.push("/Osteocare-Bone-Health-Survey/start-survey");
     }
   };
 
@@ -596,14 +592,14 @@ const page = () => {
                           setIsNegativeBMD(e === "-" ? true : false)
                         }
                       >
-                        <SelectTrigger className="">
+                        <SelectTrigger className="bg-gray-200">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent className="max-w-20 min-w-20 hover: bg-transparent">
                           <SelectItem
                             value="select"
                             className=" bg-gray-100 
-                                hover:bg-gray-300                                 
+                                hover:bg-gray-300 
                                 data-[highlighted]:bg-gray-200 
                                 data-[state=checked]:bg-gray-400
                                 data-[highlighted]:text-black 
@@ -1410,7 +1406,7 @@ const page = () => {
                       htmlFor="History_of_ortho:"
                       className="py-2 text-xl pl-2"
                     >
-                      HISTORY OF ANY ORTHOPAEDIC SURGERIES :
+                      HISTORY OF ANY ORTHOPAEDIC SURGERIES:
                     </Label>
                     <RadioGroup
                       defaultValue={questions.orthopaedic_surgeries}
@@ -1470,7 +1466,7 @@ const page = () => {
             <div className="w-full flex items-center justify-center gap-10">
               <Button
                 type="button"
-                className="w-[40%] rounded-full  bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                className="w-[40%] rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial text-md"
                 disabled={currentQuestion === 1}
                 onClick={handlePrev}
               >
@@ -1478,7 +1474,7 @@ const page = () => {
               </Button>
               <Button
                 type={"button"}
-                className="w-[40%] rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                className="w-[40%] rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial text-md"
                 disabled={isLoading}
                 onClick={(e) => handleNext(e)}
               >
