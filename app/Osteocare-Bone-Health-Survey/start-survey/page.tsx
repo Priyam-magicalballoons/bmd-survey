@@ -131,7 +131,15 @@ const page = () => {
               <p className="absolute right-3 text-[#1693dc] text-xl md:text-2xl">
                 ADD PATIENT
               </p>
-              <span className="absolute h-10 w-10 rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl">
+              <span
+                className={`absolute h-10 ${
+                  patientCount <= 99
+                    ? "w-10"
+                    : patientCount <= 999 && patientCount > 99
+                    ? "w-12"
+                    : "w-15"
+                } rounded-full bg-[#1693dc] flex items-center justify-center bottom-2 right-2 text-xl`}
+              >
                 {patientCount < 9 ? `0${patientCount}` : patientCount || "00"}
               </span>
             </Button>

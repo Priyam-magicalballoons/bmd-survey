@@ -123,7 +123,7 @@ export default function AddDoctorPage() {
                   }))
                 }
                 required
-                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
+                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl selection:bg-[#143975]"
               />
               <Input
                 id="mslcode"
@@ -137,7 +137,7 @@ export default function AddDoctorPage() {
                   }))
                 }
                 required
-                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
+                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl selection:bg-[#143975]"
               />
               <Input
                 id="regNo"
@@ -151,7 +151,7 @@ export default function AddDoctorPage() {
                   }))
                 }
                 required
-                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
+                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl selection:bg-[#143975]"
               />
               <Input
                 id="mobile"
@@ -163,13 +163,13 @@ export default function AddDoctorPage() {
                   setDoctorData((prev) => ({ ...prev, mobile: value }));
                 }}
                 required
-                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
+                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl selection:bg-[#143975]"
               />
             </div>
             <div className="w-full flex items-center justify-center">
               <Button
                 type="submit"
-                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                className="w-56 rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial text-md"
                 disabled={isLoading}
               >
                 {isLoading ? "SUBMITTING..." : "PROCEED"}

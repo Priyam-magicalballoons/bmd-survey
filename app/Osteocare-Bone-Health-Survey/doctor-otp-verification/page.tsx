@@ -189,11 +189,11 @@ export default function DoctorOTPVerificationPage() {
                   setOtp(value);
                 }}
                 required
-                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center"
+                className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center selection:bg-[#143975]"
               />
               <Button
                 type="submit"
-                className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial mt-5"
+                className="w-56 rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial mt-5 text-md"
                 disabled={isLoading}
               >
                 {isLoading ? "SUBMITTING..." : "SUBMIT"}

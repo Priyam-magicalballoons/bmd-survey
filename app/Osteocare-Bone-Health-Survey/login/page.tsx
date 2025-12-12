@@ -116,13 +116,13 @@ export default function LoginPage() {
                     setCampId(e.target.value);
                   }}
                   required
-                  className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none"
+                  className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none selection:text-white selection:bg-[#143975]"
                 />
               </div>
               <div className="w-full flex items-center justify-center">
                 <Button
                   type="submit"
-                  className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial"
+                  className="w-56 rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial text-md "
                   disabled={isLoading}
                   hidden={!!address}
                 >
@@ -136,13 +136,13 @@ export default function LoginPage() {
 
       {address && (
         <div className="w-full flex items-center flex-col">
-          <p className="text-center pb-3">LOCATION</p>
-          <div className="bg-white w-80 border rounded-xl text-sm text-center p-3">
+          <p className="text-center pb-3 font-semibold text-lg">LOCATION</p>
+          <div className="bg-white w-80 border-t-2 rounded-xl text-sm text-center p-3 border-[#143975] border-b border-x">
             {address}
           </div>
           <Button
             onClick={handleConfirm}
-            className="w-56 rounded-full bg-white text-[#1693dc] shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.5)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-white border border-gray-200 font-arial mt-5"
+            className="w-56 rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial mt-5 text-md"
           >
             Confirm
           </Button>
