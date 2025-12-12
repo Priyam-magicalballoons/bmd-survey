@@ -133,7 +133,7 @@ export const savePatient = async (data: PatientData) => {
     (await cookies()).delete("tempData");
     return {
       status: 200,
-      message: "Patient and questionnaire saved successfully",
+      message: "Patient Survey Submitted Successfully",
       data: result,
     };
   } catch (error: any) {
