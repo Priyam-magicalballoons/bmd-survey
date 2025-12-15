@@ -57,16 +57,16 @@ export const savePatient = async (data: PatientData) => {
       return { status: 401, message: "Invalid token" };
     }
 
-    const count = await prisma.patient.count({
-      where: {
-        coordinatorId: coordinator.id,
-      },
-    });
+    // const count = await prisma.patient.count({
+    //   where: {
+    //     coordinatorId: coordinator.id,
+    //   },
+    // });
 
-    const nextPatientId = `${coordinator.campId}_${String(count + 1).padStart(
-      3,
-      "0"
-    )}`;
+    // const nextPatientId = `${coordinator.campId}_${String(count + 1).padStart(
+    //   3,
+    //   "0"
+    // )}`;
 
     const ipAddress = await getIpAddress();
 
@@ -151,7 +151,7 @@ export const savePatient = async (data: PatientData) => {
         // 2️⃣ Patient
         tx`
       INSERT INTO "Patient" (
-        id, name, age, gender, otp, "patientId", number,
+        id, name, age, gender, otp, number,
         "coordinatorId", "createdAt", "endedAt", "ipAddress"
       )
       VALUES (
@@ -160,7 +160,6 @@ export const savePatient = async (data: PatientData) => {
         ${data.age},
         ${data.gender},
         ${decryptData(data.one!)},
-        ${nextPatientId},
         ${encryptData(data.mobile)},
         ${coordinator.id},
         ${createdAt},
