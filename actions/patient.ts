@@ -136,9 +136,10 @@ export const savePatient = async (data: PatientData) => {
     const QuestionnaireID = randomUUID();
     const createdAt = data.startTime ?? new Date();
 
-    const result = await sql.transaction((tx) => [
-      // 1️⃣ OTP
-      tx`
+    const retry = await withRetry(async () => {
+      const result = await sql.transaction((tx) => [
+        // 1️⃣ OTP
+        tx`
       INSERT INTO "otp" (id, phone, otp)
       VALUES (
         ${OTPID},
@@ -147,8 +148,8 @@ export const savePatient = async (data: PatientData) => {
       )
     `,
 
-      // 2️⃣ Patient
-      tx`
+        // 2️⃣ Patient
+        tx`
       INSERT INTO "Patient" (
         id, name, age, gender, otp, "patientId", number,
         "coordinatorId", "createdAt", "endedAt", "ipAddress"
@@ -169,8 +170,8 @@ export const savePatient = async (data: PatientData) => {
       RETURNING *
     `,
 
-      // 3️⃣ Questionnaire
-      tx`
+        // 3️⃣ Questionnaire
+        tx`
       INSERT INTO "Questionaire" (
       id,
         alcohol,
@@ -217,13 +218,15 @@ export const savePatient = async (data: PatientData) => {
       )
       RETURNING *
     `,
-    ]);
+      ]);
+      return result;
+    });
 
     (await cookies()).delete("tempData");
     return {
       status: 200,
       message: "Patient Survey Submitted Successfully",
-      data: result,
+      data: retry,
     };
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
