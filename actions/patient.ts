@@ -1,11 +1,13 @@
 "use server";
 
+import { sql } from "@/lib/db";
 import { getIpAddress, withRetry } from "@/lib/helpers";
 import { decryptData, encryptData, hashData } from "@/lib/saveTempUserData";
 import { prisma } from "@/prisma/client";
 import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { randomUUID } from "crypto";
 
 interface PatientData {
   name?: string | undefined;
@@ -75,60 +77,147 @@ export const savePatient = async (data: PatientData) => {
       };
     }
 
-    const result = await withRetry(async () =>
-      prisma.$transaction(async (prismaTx) => {
-        await prismaTx.otp.create({
-          data: {
-            phone: hashData(data.mobile!),
-            otp: decryptData(data.one!),
-          },
-        });
-        const patient = await prismaTx.patient.create({
-          data: {
-            name: encryptData(data.name),
-            age: data.age,
-            gender: data.gender,
-            otp: decryptData(data.one!),
-            patientId: nextPatientId,
-            number: encryptData(data.mobile), // must be unique at DB level
-            coordinatorId: coordinator.id,
-            createdAt: data.startTime,
-            endedAt: new Date(Date.now()),
-            ipAddress,
-          },
-        });
+    // const result = await withRetry(async () =>
+    //   prisma.$transaction(async (prismaTx) => {
+    //     await prismaTx.otp.create({
+    //       data: {
+    //         phone: hashData(data.mobile!),
+    //         otp: decryptData(data.one!),
+    //       },
+    //     });
+    //     const patient = await prismaTx.patient.create({
+    //       data: {
+    //         name: encryptData(data.name),
+    //         age: data.age,
+    //         gender: data.gender,
+    //         otp: decryptData(data.one!),
+    //         patientId: nextPatientId,
+    //         number: encryptData(data.mobile),
+    //         coordinatorId: coordinator.id,
+    //         createdAt: data.startTime,
+    //         endedAt: new Date(Date.now()),
+    //         ipAddress,
+    //       },
+    //     });
 
-        // Directly create questionnaire linked to patient
-        const questionnaire = await prismaTx.questionaire.create({
-          data: {
-            alcohol: data.alcohol,
-            bmdScore: data.bmd_score,
-            copd: data.existing_medical_conditions.copd,
-            diabetes: data.existing_medical_conditions.diabetes,
-            diet: data.diet,
-            epilepsy: data.existing_medical_conditions.epilepsy,
-            height: data.height,
-            historyOfFractures: data.history_of_fractures,
-            hypertension: data.existing_medical_conditions.hypertension,
-            kneeOsteoarthritis:
-              data.existing_medical_conditions.knee_osteoarthritis,
-            orthopaedicSurgeriesHistory: data.orthopaedic_surgeries,
-            smoking: data.smoking,
-            tobacco: data.tobacco_chewing,
-            weight: data.weight,
-            copdMedication:
-              data.existing_medical_conditions.copd_regular_medicine,
-            epilepsyMedication:
-              data.existing_medical_conditions.epilepsy_regular_medicine,
-            fractureAge: data.fracture_diagnosed,
-            Menopause: data.menopause,
-            patientId: patient.id,
-          },
-        });
+    //     const questionnaire = await prismaTx.questionaire.create({
+    //       data: {
+    //         alcohol: data.alcohol,
+    //         bmdScore: data.bmd_score,
+    //         copd: data.existing_medical_conditions.copd,
+    //         diabetes: data.existing_medical_conditions.diabetes,
+    //         diet: data.diet,
+    //         epilepsy: data.existing_medical_conditions.epilepsy,
+    //         height: data.height,
+    //         historyOfFractures: data.history_of_fractures,
+    //         hypertension: data.existing_medical_conditions.hypertension,
+    //         kneeOsteoarthritis:
+    //           data.existing_medical_conditions.knee_osteoarthritis,
+    //         orthopaedicSurgeriesHistory: data.orthopaedic_surgeries,
+    //         smoking: data.smoking,
+    //         tobacco: data.tobacco_chewing,
+    //         weight: data.weight,
+    //         copdMedication:
+    //           data.existing_medical_conditions.copd_regular_medicine,
+    //         epilepsyMedication:
+    //           data.existing_medical_conditions.epilepsy_regular_medicine,
+    //         fractureAge: data.fracture_diagnosed,
+    //         Menopause: data.menopause,
+    //         patientId: patient.id,
+    //       },
+    //     });
 
-        return { patient, questionnaire };
-      })
-    );
+    //     return { patient, questionnaire };
+    //   })
+    // );
+
+    const OTPID = randomUUID();
+    const patientID = randomUUID();
+    const QuestionnaireID = randomUUID();
+    const createdAt = data.startTime ?? new Date();
+
+    const result = await sql.transaction((tx) => [
+      // 1️⃣ OTP
+      tx`
+      INSERT INTO "otp" (id, phone, otp)
+      VALUES (
+        ${OTPID},
+        ${hashData(data.mobile!)},
+        ${decryptData(data.one!)}
+      )
+    `,
+
+      // 2️⃣ Patient
+      tx`
+      INSERT INTO "Patient" (
+        id, name, age, gender, otp, "patientId", number,
+        "coordinatorId", "createdAt", "endedAt", "ipAddress"
+      )
+      VALUES (
+        ${patientID},
+        ${encryptData(data.name)},
+        ${data.age},
+        ${data.gender},
+        ${decryptData(data.one!)},
+        ${nextPatientId},
+        ${encryptData(data.mobile)},
+        ${coordinator.id},
+        ${createdAt},
+        ${new Date()},
+        ${ipAddress}
+      )
+      RETURNING *
+    `,
+
+      // 3️⃣ Questionnaire
+      tx`
+      INSERT INTO "Questionaire" (
+      id,
+        alcohol,
+        "bmdScore",
+        copd,
+        diabetes,
+        diet,
+        epilepsy,
+        height,
+        "historyOfFractures",
+        hypertension,
+        "kneeOsteoarthritis",
+        "orthopaedicSurgeriesHistory",
+        smoking,
+        tobacco,
+        weight,
+        "copdMedication",
+        "epilepsyMedication",
+        "fractureAge",
+        "Menopause",
+        "patientId"
+      )
+      VALUES (
+      ${QuestionnaireID},
+        ${data.alcohol},
+        ${data.bmd_score},
+        ${data.existing_medical_conditions.copd},
+        ${data.existing_medical_conditions.diabetes},
+        ${data.diet},
+        ${data.existing_medical_conditions.epilepsy},
+        ${data.height},
+        ${data.history_of_fractures},
+        ${data.existing_medical_conditions.hypertension},
+        ${data.existing_medical_conditions.knee_osteoarthritis},
+        ${data.orthopaedic_surgeries},
+        ${data.smoking},
+        ${data.tobacco_chewing},
+        ${data.weight},
+        ${data.existing_medical_conditions.copd_regular_medicine},
+        ${data.existing_medical_conditions.epilepsy_regular_medicine},
+        ${data.fracture_diagnosed},
+        ${data.menopause},
+        ${patientID}
+      )
+      RETURNING *
+    `,
+    ]);
 
     (await cookies()).delete("tempData");
     return {
