@@ -48,16 +48,6 @@ export default function LoginPage() {
     const data = JSON.parse(response.message);
     setAddress(data.address);
     setId(data.id);
-    // toast(response.message, {
-    //   duration: 2000,
-    //   position: "top-center",
-    //   style: {
-    //     backgroundColor: "#f0fdf4",
-    //     color: "#166534",
-    //     borderColor: "#bbf7d0",
-    //   },
-    // });
-    // return router.push("/Osteocare-Bone-Health-Survey/");
   };
 
   const handleConfirm = async () => {
@@ -148,89 +138,6 @@ export default function LoginPage() {
           </Button>
         </div>
       )}
-
-      {/* <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="bg-primary/10 p-3 rounded-full">
-              <Activity className="h-8 w-8 text-primary" />
-            </div>
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">
-              BMD Camp Survey
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Bone Health Screening Platform
-            </p>
-          </div>
-        </div>
-
-        <Card className="border-border/50 shadow-lg">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Sign In</CardTitle>
-            <CardDescription className="text-center">
-              Enter your credentials to access the survey platform
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  value={credentials.username}
-                  onChange={(e) =>
-                    setCredentials((prev) => ({
-                      ...prev,
-                      username: e.target.value,
-                    }))
-                  }
-                  required
-                  className="bg-input border-border"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={credentials.password}
-                  onChange={(e) =>
-                    setCredentials((prev) => ({
-                      ...prev,
-                      password: e.target.value,
-                    }))
-                  }
-                  required
-                  className="bg-input border-border"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                disabled={isLoading}
-              >
-                {isLoading ? "Signing In..." : "Sign In"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div className="space-y-2">
-            <Shield className="h-6 w-6 text-primary mx-auto" />
-            <p className="text-sm text-muted-foreground">Secure Platform</p>
-          </div>
-          <div className="space-y-2">
-            <Users className="h-6 w-6 text-primary mx-auto" />
-            <p className="text-sm text-muted-foreground">Multi-User Support</p>
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }

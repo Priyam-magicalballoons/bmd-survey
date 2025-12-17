@@ -322,7 +322,7 @@ const page = () => {
         return;
       } else {
         toast(savePatientData?.message, {
-          duration: 2000,
+          duration: 5000,
           position: "top-center",
           style: {
             backgroundColor: "#f0fdf4",

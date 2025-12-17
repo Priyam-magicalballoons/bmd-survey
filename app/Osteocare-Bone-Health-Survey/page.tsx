@@ -33,7 +33,7 @@ export default function Dashboard() {
 
     if (response?.status === 200) {
       toast(response?.message, {
-        duration: 2000,
+        duration: 3000,
         position: "top-center",
         style: {
           backgroundColor: "#f0fdf4",
@@ -43,7 +43,7 @@ export default function Dashboard() {
       });
     } else {
       toast(response?.message, {
-        duration: 2000,
+        duration: 3000,
         position: "top-center",
         style: {
           backgroundColor: "#fef2f2",

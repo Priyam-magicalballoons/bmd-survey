@@ -37,6 +37,7 @@ export default function AddDoctorPage() {
     if (!doctorData.name || !doctorData.mslCode || !doctorData.mobile) {
       return toast("Incomplete Details", {
         description: "Please enter all the details",
+        duration: 3000,
         position: "top-center",
         style: {
           backgroundColor: "#feff98",
@@ -51,6 +52,7 @@ export default function AddDoctorPage() {
       toast("Invalid Mobile Number", {
         description: "Please enter a valid 10-digit mobile number",
         position: "top-center",
+        duration: 3000,
         style: {
           backgroundColor: "#feff98",
           color: "#121212",
