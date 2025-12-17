@@ -2,28 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Activity,
-  Users,
-  FileText,
-  LogOut,
-  User,
-  Plus,
-  MapPin,
-} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { LogoutUser } from "@/actions/auth";
 import { findDoctor } from "@/actions/doctor";
 import { completeCamp, getIpAddress, getTempData } from "@/lib/helpers";
 import { toast } from "sonner";
-import { generateOTP } from "@/lib/otp";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -72,6 +55,7 @@ export default function Dashboard() {
         </div>
         <div className="flex-col md:flex-row flex gap-10">
           <Button
+            autoFocus
             className="text-2xl md:text-4xl px-16 max-w-80 min-w-80 py-20 md:py-24 rounded-2xl bg-[#185eb2] hover:bg-[#003a99] font-arial cursor-pointer"
             onClick={() =>
               router.push("/Osteocare-Bone-Health-Survey/start-survey")

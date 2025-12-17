@@ -97,6 +97,7 @@ export default function LoginPage() {
                   ENTER CAMP ID
                 </Label>
                 <Input
+                  autoFocus
                   id="username"
                   type="text"
                   placeholder=""
@@ -131,6 +132,7 @@ export default function LoginPage() {
             {address}
           </div>
           <Button
+            autoFocus
             onClick={handleConfirm}
             className="w-56 rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial mt-5 text-md"
           >

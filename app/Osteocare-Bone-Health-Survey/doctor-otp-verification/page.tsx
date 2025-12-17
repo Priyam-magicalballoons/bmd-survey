@@ -124,6 +124,7 @@ export default function DoctorOTPVerificationPage() {
                 ENTER OTP
               </Label>
               <Input
+                autoFocus
                 id="username"
                 type="text"
                 placeholder=""
