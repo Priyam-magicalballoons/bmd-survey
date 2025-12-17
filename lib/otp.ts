@@ -90,11 +90,13 @@ export const generateOTP = async (
   const msg =
     type === "OTP"
       ? to === "Doctor"
-        ? `Your OTP for Consent for conducting Cipla's Bone Health Survey at your clinic is ${otp} To know more please click on the link: https://doctorcrm.in/BMD/Dr_Consent.html
-        
+        ? `Your OTP for Consent for conducting Bone Health Survey at your clinic is ${otp}
+To view the consent form and privacy policy please click here: https://doctorcrm.in/BMD/Dr_Consent.html
+
+
 Regards,
-Magical Balloons 
- 
+Magical Balloons
+
 `
         : `Your OTP for Consent for participating in Cipla's Bone Health Survey is ${otp} 
 To view the consent form and privacy policy please click here: https://doctorcrm.in/BMD/Pt_Consent.html
@@ -125,7 +127,7 @@ Magical Balloons
           tempid:
             type === "OTP"
               ? to === "Doctor"
-                ? "1207176432573057799"
+                ? "1207176587633856898"
                 : "1207176432861265762"
               : "1207176457959989457",
         },
