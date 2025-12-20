@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { getTempData } from "@/lib/helpers";
-import { ArrowRight, Circle, InfoIcon } from "lucide-react";
+import { ArrowRight, Circle, CircleAlertIcon, InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -112,15 +112,18 @@ const page = () => {
         !skip.includes(key) &&
         (value === "" || value === null || value === undefined)
       ) {
-        errors[key] = "This field is required";
+        console.log(errors);
+        errors[key] = `${key} is required`;
       }
     });
 
     setErrors(errors);
+
     return errors;
   };
 
   const handleNext = (e: React.FormEvent) => {
+    validateForm(questions);
     if (
       currentQuestion === 1 &&
       (!questions.age.trim() ||
@@ -276,16 +279,6 @@ const page = () => {
       return;
     }
 
-    // const savePatientData = await savePatient(sessionData, questions);
-    // const campData = await getCampData();
-    // const savePatientData = await producePatientEvent(
-    //   {
-    //     ...sessionData,
-    //     ...questions,
-    //   },
-    //   campData.id
-    // );
-
     try {
       const savePatientData = await savePatient({
         ...sessionData,
@@ -304,8 +297,6 @@ const page = () => {
         savePatientData.status === 503 ||
         savePatientData.status === 401
       ) {
-        // Save unsaved patient data in localStorage
-
         toast(savePatientData?.message, {
           description: "Kindly try again.",
           duration: 5000,
@@ -369,6 +360,7 @@ const page = () => {
                       AGE
                     </Label>
                     <Input
+                      autoFocus
                       id="age"
                       type="text"
                       inputMode="numeric"
@@ -387,10 +379,20 @@ const page = () => {
                         }
 
                         setQuestions((prev) => ({ ...prev, age: value }));
+                        validateForm(questions);
                       }}
                       required
                       className="border-border bg-gray-300/50 h-10 focus-visible:ring-gray-400 focus-visible:outline-1 border-none text-center text-xl"
                     />
+                    {/* {errors.age && (
+                      <p
+                        style={{ color: "red" }}
+                        className="ml-2 flex flex-row items-center gap-2"
+                      >
+                        <CircleAlertIcon className="text-red-600 size-4" />{" "}
+                        {errors.age}
+                      </p>
+                    )} */}
                   </div>
                   <div className="w-full flex flex-col px-10 ">
                     <Label
@@ -402,13 +404,14 @@ const page = () => {
                     <RadioGroup
                       defaultValue={questions.gender}
                       className="flex flex-row items-center flex-wrap -ml-5 px-2"
-                      onValueChange={(e) =>
+                      onValueChange={(e) => {
                         setQuestions((prev) => ({
                           ...prev,
                           menopause: "",
                           gender: e,
-                        }))
-                      }
+                        }));
+                      }}
+                      onChange={() => validateForm(questions)}
                     >
                       <div className="flex items-center">
                         <RadioGroupItem
@@ -463,6 +466,15 @@ const page = () => {
                         </Label>
                       </div>
                     </RadioGroup>
+                    {/* {errors.gender && (
+                      <p
+                        style={{ color: "red" }}
+                        className="ml-2 flex flex-row items-center gap-2 animate-bounce"
+                      >
+                        <CircleAlertIcon className="text-red-600 size-4" />{" "}
+                        {errors.gender}
+                      </p>
+                    )} */}
                   </div>
                   <div className=" w-full flex  flex-col px-10">
                     <Label
@@ -1454,11 +1466,11 @@ const page = () => {
                         </Label>
                       </div>
                     </RadioGroup>
-                    {/* {errors.orthopaedic_surgeries && (
+                    {errors.orthopaedic_surgeries && (
                       <p style={{ color: "red" }}>
                         {errors.orthopaedic_surgeries}
                       </p>
-                    )} */}
+                    )}
                   </div>
                 </>
               )}
@@ -1473,7 +1485,7 @@ const page = () => {
                 {"PREVIOUS"}
               </Button>
               <Button
-                type={"button"}
+                type="button"
                 className="w-[40%] rounded-full bg-[#143975]  text-white font-semibold shadow-[3px_4px_2px_1px_rgba(0,_0,_0,_0.8)] active:shadow-[0px_0px_0px_1px_rgba(_100,_100,_111,_0.1)] hover:bg-[#143975] tracking-wide cursor-pointer font-arial text-md"
                 disabled={isLoading}
                 onClick={(e) => handleNext(e)}
