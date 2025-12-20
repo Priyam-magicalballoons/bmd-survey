@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllDataForExcel } from "@/actions/reports";
+import { generateReportsExcel, getPaginationData } from "@/actions/reports";
 import { Button } from "@/components/ui/button";
 import { decryptData } from "@/lib/saveTempUserData";
 import React, { useEffect, useState } from "react";
@@ -9,22 +9,45 @@ import { saveAs } from "file-saver";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Key, LockKeyhole, User2 } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  LockKeyhole,
+  User2,
+} from "lucide-react";
+
+const PAGE_SIZE = 50;
+
 import { toast } from "sonner";
 
 const page = () => {
   const [data, setData] = useState<any>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  let patientIdIndex = 1;
+  let prevCampID = "";
+
   useEffect(() => {
+    setIsLoading(true);
     const check = async () => {
-      const response = await getAllDataForExcel();
-      // console.log(response);
-      setData(response);
+      const { data, page, total } = await getPaginationData(
+        currentPage,
+        PAGE_SIZE
+      );
+      // console.log(data);
+      setData(data);
+      setCurrentPage(page);
+      setTotalPages(total);
+      setIsLoading(false);
     };
     check();
-  }, []);
+  }, [currentPage]);
 
   function rgbToHex(rgb: string): string {
     const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
@@ -38,154 +61,21 @@ const page = () => {
       .toUpperCase();
   }
 
-  function findBackgroundColor(el: HTMLElement): string {
-    let element: HTMLElement | null = el;
-    while (element) {
-      const color = window.getComputedStyle(element).backgroundColor;
-      if (
-        color &&
-        color !== "transparent" &&
-        !color.includes("rgba(0, 0, 0, 0)")
-      ) {
-        return color;
-      }
-      element = element.parentElement;
-    }
-    return "rgb(255, 255, 255)"; // default white
-  }
+  const handleDownlaod = async () => {
+    const buffer = await generateReportsExcel();
 
-  async function exportTableToExcel(
-    tableId: string,
-    fileName = `BMD-report - (${format(new Date(), "do MMM yyyy")}).xlsx`
-  ) {
-    const table = document.getElementById(tableId) as HTMLTableElement | null;
-    if (!table) {
-      console.error("Table not found:", tableId);
-      return;
-    }
-
-    const wb = new ExcelJS.Workbook();
-    const ws = wb.addWorksheet("Sheet1");
-
-    const mergeMap: { [key: string]: { rowspan: number; colspan: number } } =
-      {};
-    const matrix: { text: string; td: HTMLTableCellElement }[][] = [];
-
-    for (let r = 0; r < table.rows.length; r++) {
-      const row = table.rows[r];
-      const cells = Array.from(row.cells);
-      let colIndex = 0;
-      matrix[r] = matrix[r] || [];
-
-      for (const td of cells) {
-        while (matrix[r][colIndex]) colIndex++;
-        const colspan = td.colSpan || 1;
-        const rowspan = td.rowSpan || 1;
-
-        for (let rr = 0; rr < rowspan; rr++) {
-          for (let cc = 0; cc < colspan; cc++) {
-            matrix[r + rr] = matrix[r + rr] || [];
-            matrix[r + rr][colIndex + cc] =
-              rr === 0 && cc === 0
-                ? { text: td.innerText.trim(), td }
-                : { text: "", td };
-          }
-        }
-
-        if (rowspan > 1 || colspan > 1) {
-          mergeMap[`${r},${colIndex}`] = { rowspan, colspan };
-        }
-
-        colIndex += colspan;
-      }
-    }
-
-    matrix.forEach((rowData) => {
-      ws.addRow(rowData.map((cell) => cell.text));
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
 
-    Object.keys(mergeMap).forEach((key) => {
-      const [r, c] = key.split(",").map(Number);
-      const { rowspan, colspan } = mergeMap[key];
-      ws.mergeCells(r + 1, c + 1, r + rowspan, c + colspan);
-    });
-
-    for (let r = 0; r < matrix.length; r++) {
-      for (let c = 0; c < matrix[r].length; c++) {
-        const cellInfo = matrix[r][c];
-        const td = cellInfo.td;
-        const excelCell = ws.getCell(r + 1, c + 1);
-        if (!td) continue;
-
-        const style = window.getComputedStyle(td);
-
-        // ✅ FIXED: find nearest background (td → tr → table)
-        const bgColor = findBackgroundColor(td);
-        if (bgColor && !bgColor.includes("rgba(0, 0, 0, 0)")) {
-          const hex = rgbToHex(bgColor);
-          excelCell.fill = {
-            type: "pattern",
-            pattern: "solid",
-            fgColor: { argb: "FF" + hex },
-          };
-        }
-
-        // Font color + style
-        const textColor = rgbToHex(style.color);
-        excelCell.font = {
-          bold:
-            style.fontWeight === "bold" || parseInt(style.fontWeight) >= 600,
-          italic: style.fontStyle === "italic",
-          color: { argb: "FF" + textColor },
-          size: parseInt(style.fontSize) || 12,
-        };
-
-        // Alignment
-        const align: any = {
-          horizontal:
-            style.textAlign === "center"
-              ? "center"
-              : style.textAlign === "right"
-              ? "right"
-              : "left",
-          vertical:
-            style.verticalAlign === "middle"
-              ? "middle"
-              : style.verticalAlign === "bottom"
-              ? "bottom"
-              : "top",
-          // wrapText: true,
-        };
-        excelCell.alignment = align;
-
-        // Optional border
-        excelCell.border = {
-          top: { style: "thin", color: { argb: "FFAAAAAA" } },
-          left: { style: "thin", color: { argb: "FFAAAAAA" } },
-          bottom: { style: "thin", color: { argb: "FFAAAAAA" } },
-          right: { style: "thin", color: { argb: "FFAAAAAA" } },
-        };
-      }
-    }
-
-    ws.columns.forEach((col, index) => {
-      let maxLength = 10;
-      col.eachCell!({ includeEmpty: true }, (cell) => {
-        const len = cell.value ? cell.value.toString().length : 0;
-        if (len > maxLength) maxLength = len;
-      });
-
-      // limit max width globally or per column
-      const maxWidth = 80;
-      const cappedWidth =
-        index === 3 ? Math.min(maxLength, 60) : Math.min(maxLength, maxWidth);
-
-      col.width = cappedWidth;
-    });
-
-    const buffer = await wb.xlsx.writeBuffer();
-    saveAs(new Blob([buffer]), fileName);
-  }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `BMD-report - (${format(new Date(), "do MMM yyyy")}).xlsx`;
+    // a.download = "Report";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     const lastLoggedInTime = sessionStorage.getItem("loggedInUserTime");
@@ -264,7 +154,8 @@ const page = () => {
         <div className="pb-5 pl-10 ">
           <Button
             className="bg-black text-white hover:bg-black/50"
-            onClick={() => exportTableToExcel("downloadTable")}
+            // onClick={() => exportTableToExcel("downloadTable")}
+            onClick={handleDownlaod}
           >
             Download Excel
           </Button>
@@ -507,191 +398,244 @@ const page = () => {
             </th>
           </tr>
           {data.map((d: any, index: number) => {
+            if (d.camp_id !== prevCampID) {
+              prevCampID = d.camp_id;
+              patientIdIndex -= index;
+            }
             return (
-              <tr key={d?.patients?.id} className="text-center text-[12px]">
+              <tr key={index} className="text-center text-[12px]">
                 <td className="px-3 border border-black">{index + 1}</td>
+                <td className="px-3 border border-black">{d?.camp_id}</td>
                 <td className="px-3 border border-black">
-                  {d?.coordinator?.campId}
+                  {d?.coordinator_name}
+                </td>
+                <td className="px-3 border border-black">{d?.camp_location}</td>
+                <td className="px-3 border border-black">{d?.doctor_name}</td>
+                <td className="px-3 border border-black">
+                  {d?.doctor_msl_code}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.coordinator?.name}
+                  {d?.doctor_mobile_number}
+                </td>
+                <td className="px-3 border border-black">{d?.doctor_reg_no}</td>
+                <td className="px-3 border border-black">{d?.doctor_otp}</td>
+                <td className="px-3 border border-black">
+                  {d?.doctor_ip_address}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.coordinator?.location}
-                </td>
-                <td className="px-3 border border-black">{d?.doctor?.name}</td>
-                <td className="px-3 border border-black">
-                  {d?.doctor?.mslCode}
-                </td>
-                <td className="px-3 border border-black">
-                  {d?.doctor?.number}
-                </td>
-                <td className="px-3 border border-black">
-                  {d?.doctor?.registrationNumber}
-                </td>
-                <td className="px-3 border border-black">{d?.doctor?.otp}</td>
-                <td className="px-3 border border-black">
-                  {d?.doctor?.ipAddress}
-                </td>
-                <td className="px-3 border border-black">
-                  {(d?.doctor?.createdAt &&
+                  {(d?.doctor_createdat &&
                     format(
-                      new Date(d?.doctor?.createdAt),
+                      new Date(d?.doctor_createdat),
                       "dd-MM-yyyy HH:mm:ss"
                     )) ||
                     ""}
                 </td>
-                {d?.coordinator?.endedAt !== null ? (
+                {d?.doctor_endedat !== null ? (
                   <td className="px-3 border border-black">
-                    {format(
-                      new Date(d?.coordinator?.endedAt),
-                      "dd-MM-yyyy HH:mm:ss"
-                    )}
+                    {format(new Date(d?.doctor_endedat), "dd-MM-yyyy HH:mm:ss")}
                   </td>
                 ) : (
                   <td className="px-3 border border-black">ONGOING</td>
                 )}
                 <td className="px-3 border border-black">
-                  {d?.patients?.patientId}
+                  {`${d?.camp_id}_${d?.patient_index
+                    .toString()
+                    .split("/")[0]
+                    .padStart(3, "0")}`}
                 </td>
                 <td className="px-3 border border-black">
-                  {decryptData(d?.patients?.name)}
+                  {decryptData(d?.name)}
                 </td>
                 <td className="px-3 border border-black">
-                  {decryptData(d?.patients?.number)}
+                  {decryptData(d?.number)}
                 </td>
-                <td className="px-3 border border-black">{d?.patients?.otp}</td>
+                <td className="px-3 border border-black">{d?.otp}</td>
+                <td className="px-3 border border-black">{d?.ipAddress}</td>
                 <td className="px-3 border border-black">
-                  {d?.patients?.ipAddress}
-                </td>
-                <td className="px-3 border border-black">
-                  {format(
-                    new Date(d?.patients?.createdAt),
-                    "dd-MM-yyyy HH:mm:ss"
-                  )}
-                </td>
-                <td className="px-3 border border-black">
-                  {format(
-                    new Date(d?.patients?.endedAt),
-                    "dd-MM-yyyy HH:mm:ss"
-                  )}
-                </td>
-                <td className="px-3 border border-black">{d?.patients?.age}</td>
-                <td className="px-3 border border-black">
-                  {d?.patients?.gender === "male" && "✓"}
+                  {d?.patient_createdAt instanceof Date
+                    ? format(
+                        new Date(d?.patient_createdAt),
+                        "dd-MM-yyyy HH:mm:ss"
+                      )
+                    : d?.patient_createdAt}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.patients?.gender === "female" && "✓"}
+                  {d?.patient_endedAt instanceof Date
+                    ? format(
+                        new Date(d?.patient_endedAt),
+                        "dd-MM-yyyy HH:mm:ss"
+                      )
+                    : d?.patient_endedAt}
+                </td>
+                <td className="px-3 border border-black">{d?.age}</td>
+                <td className="px-3 border border-black">
+                  {d?.gender === "male" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.patients?.gender === "other" && "✓"}
+                  {d?.gender === "female" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.bmdScore}
+                  {d?.gender === "other" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.Menopause === "yes" && "✓"}
+                  {d?.questionaire?.bmdScore}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.Menopause === "no" && "✓"}
+                  {d?.questionaire?.Menopause === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.weight}
+                  {d?.questionaire?.Menopause === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.height}
+                  {d?.questionaire?.weight}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.copd === "yes" && "✓"}
+                  {d?.questionaire?.height}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.copdMedication === "yes" && "✓"}
+                  {d?.questionaire?.copd === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.copdMedication === "no" && "✓"}
+                  {d?.questionaire?.copdMedication === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.copd === "no" && "✓"}
+                  {d?.questionaire?.copdMedication === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.kneeOsteoarthritis === "yes" && "✓"}
+                  {d?.questionaire?.copd === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.kneeOsteoarthritis === "no" && "✓"}
+                  {d?.questionaire?.kneeOsteoarthritis === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.diabetes === "yes" && "✓"}
+                  {d?.questionaire?.kneeOsteoarthritis === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.diabetes === "no" && "✓"}
+                  {d?.questionaire?.diabetes === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.epilepsy === "yes" && "✓"}
+                  {d?.questionaire?.diabetes === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.epilepsyMedication === "yes" && "✓"}
+                  {d?.questionaire?.epilepsy === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.epilepsyMedication === "no" && "✓"}
+                  {d?.questionaire?.epilepsyMedication === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.epilepsy === "no" && "✓"}
+                  {d?.questionaire?.epilepsyMedication === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.hypertension === "yes" && "✓"}
+                  {d?.questionaire?.epilepsy === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.hypertension === "no" && "✓"}
+                  {d?.questionaire?.hypertension === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.diet === "vegetarian" && "✓"}
+                  {d?.questionaire?.hypertension === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.diet === "Vegan" && "✓"}
+                  {d?.questionaire?.diet === "vegetarian" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.diet === "Non-vegetarian" && "✓"}
+                  {d?.questionaire?.diet === "Vegan" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.smoking === "yes" && "✓"}
+                  {d?.questionaire?.diet === "Non-vegetarian" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.smoking === "no" && "✓"}
+                  {d?.questionaire?.smoking === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.tobacco === "yes" && "✓"}
+                  {d?.questionaire?.smoking === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.tobacco === "no" && "✓"}
+                  {d?.questionaire?.tobacco === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.alcohol === "yes" && "✓"}
+                  {d?.questionaire?.tobacco === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.alcohol === "no" && "✓"}
+                  {d?.questionaire?.alcohol === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.historyOfFractures === "yes" && "✓"}
+                  {d?.questionaire?.alcohol === "no" && "✓"}
+                </td>
+                <td className="px-3 border border-black">
+                  {d?.questionaire?.historyOfFractures === "yes" && "✓"}
                 </td>
                 <td className="px-3 border border-black text-center">
-                  {d?.questionnaire?.fractureAge}
+                  {d?.questionaire?.fractureAge}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.historyOfFractures === "no" && "✓"}
+                  {d?.questionaire?.historyOfFractures === "no" && "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.orthopaedicSurgeriesHistory === "yes" &&
+                  {d?.questionaire?.orthopaedicSurgeriesHistory === "yes" &&
                     "✓"}
                 </td>
                 <td className="px-3 border border-black">
-                  {d?.questionnaire?.orthopaedicSurgeriesHistory === "no" &&
-                    "✓"}
+                  {d?.questionaire?.orthopaedicSurgeriesHistory === "no" && "✓"}
                 </td>
               </tr>
             );
           })}
         </thead>
       </table>
+
+      <div className="flex flex-row gap-30 mt-10 sticky left-0 items-center justify-center">
+        <div className="">{`Page ${currentPage} of ${Math.ceil(
+          totalPages / PAGE_SIZE
+        )}`}</div>
+
+        <div className="flex flex-row items-center gap-2">
+          <Button
+            className="bg-black hover:bg-black/90 cursor-pointer"
+            onClick={() => setCurrentPage((prev) => (prev > 1 ? 1 : prev))}
+            disabled={isLoading || currentPage <= 1}
+          >
+            <ChevronsLeftIcon />
+          </Button>
+          <Button
+            className="bg-black hover:bg-black/90 cursor-pointer"
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={isLoading || currentPage <= 1}
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <Button
+            variant={"outline"}
+            className="border-2 border-black text-black "
+            disabled
+          >
+            {currentPage}
+          </Button>
+          <Button
+            className="bg-black hover:bg-black/90 cursor-pointer"
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={
+              isLoading || currentPage >= Math.ceil(totalPages / PAGE_SIZE)
+            }
+          >
+            <ChevronRightIcon />
+          </Button>
+          <Button
+            className="bg-black hover:bg-black/90 cursor-pointer"
+            onClick={() => {
+              setCurrentPage((prev) =>
+                prev < Math.ceil(totalPages / PAGE_SIZE)
+                  ? Math.ceil(totalPages / PAGE_SIZE)
+                  : prev
+              );
+            }}
+            disabled={
+              isLoading || currentPage >= Math.ceil(totalPages / PAGE_SIZE)
+            }
+          >
+            <ChevronsRightIcon />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
