@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/prisma/client";
+import { sql } from "@/lib/db";
 
 export const saveUser = async (id: string, campId: string) => {
   const token = await jwt.sign(
@@ -33,11 +34,14 @@ export const AuthenticateUser = async (id: string) => {
     };
   }
 
-  const user = await prisma.coordinator.findUnique({
-    where: {
-      campId: id,
-    },
-  });
+  // const user = await prisma.coordinator.findUnique({
+  //   where: {
+  //     campId: id,
+  //   },
+  // });
+
+  const [user] =
+    await sql`SELECT * FROM "Coordinator" WHERE "campId" = ${id} LIMIT 1`;
 
   if (!user) {
     return {
