@@ -142,8 +142,6 @@ export const getPaginationData = async (
   //   ORDER BY p."createdAt" ASC
   // `;
 
-  // console.log(rows[0]);
-
   return {
     total: totalCount,
     data: patients,
@@ -462,7 +460,6 @@ export async function generateReportsExcel() {
   let rowIndex = 5;
 
   data.forEach((d: any, i) => {
-    console.log(d.patient_createdAt);
     sheet.addRow([
       i + 1,
       d.camp_id,

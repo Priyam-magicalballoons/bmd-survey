@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Coordinator {
@@ -13,11 +13,11 @@ model Coordinator {
   name      String
   empId     String?
   address   String
-  patients  Patient[]
-  doctor    Doctor?
   isActive  Boolean   @default(true)
   createdAt DateTime  @default(now())
   endedAt   DateTime?
+  doctor    Doctor?
+  patients  Patient[]
 }
 
 model Doctor {
@@ -29,8 +29,8 @@ model Doctor {
   otp                String?
   ipAddress          String
   coordinatorId      String      @unique
-  coordinator        Coordinator @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
   createdAt          DateTime    @default(now())
+  coordinator        Coordinator @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
 }
 
 model Patient {
@@ -42,17 +42,16 @@ model Patient {
   coordinatorId String
   otp           String
   ipAddress     String
-  patientId     String
-  coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
-  questionaire  Questionaire?
+  patientId     String?
   createdAt     DateTime      @default(now())
   endedAt       DateTime
+  coordinator   Coordinator   @relation(fields: [coordinatorId], references: [id], onDelete: Cascade)
+  questionaire  Questionaire?
 }
 
 model Questionaire {
   id                          String   @id @default(uuid())
   patientId                   String   @unique
-  patient                     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
   bmdScore                    String
   Menopause                   String?
   weight                      String
@@ -72,6 +71,7 @@ model Questionaire {
   fractureAge                 String?
   orthopaedicSurgeriesHistory String
   createdAt                   DateTime @default(now())
+  patient                     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model otp {

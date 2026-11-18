@@ -10,7 +10,7 @@ import { getTempData, saveTempData } from "./helpers";
 export const generateOTP = async (
   phone: string,
   type?: "OTP" | "Thankyou",
-  to?: "Doctor" | "Patient"
+  to?: "Doctor" | "Patient",
 ) => {
   let otp = "";
   for (let i = 0; i < 6; i++) {
@@ -121,7 +121,7 @@ Magical Balloons
           sms: msg,
           mobiles: phone,
           senderid: "SUROTP",
-          clientsmsid: "+918451938833",
+          clientid: "+918451938833",
           accountusagetypeid: "1",
           entityid: "1201159145178998125",
           tempid:
