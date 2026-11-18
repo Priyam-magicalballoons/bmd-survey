@@ -1466,11 +1466,11 @@ const page = () => {
                         </Label>
                       </div>
                     </RadioGroup>
-                    {errors.orthopaedic_surgeries && (
+                    {/* {errors.orthopaedic_surgeries && (
                       <p style={{ color: "red" }}>
                         {errors.orthopaedic_surgeries}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 </>
               )}
