@@ -422,6 +422,21 @@ export async function generateReportsExcel() {
   // Existing conditions
   merge(2, 29, 2, 42);
 
+  // COPD / Asthma - Question 1
+  merge(3, 29, 3, 32);
+  // Knee OA
+  merge(3, 33, 3, 34);
+  // Diabetes
+  merge(3, 35, 3, 36);
+
+  // Epilepsy
+  merge(3, 37, 3, 40);
+
+  // Hypertension
+  merge(3, 41, 3, 42);
+  // Fractures
+  merge(2, 52, 2, 54);
+
   // Diet
   merge(2, 43, 2, 45);
 
@@ -474,7 +489,7 @@ export async function generateReportsExcel() {
       formatInTimeZone(
         new Date(d?.doctor_createdat),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.doctor_endedat ?? "ONGOING",
       `${d.camp_id}_${String(d.patient_index).padStart(3, "0")}`,
@@ -486,7 +501,7 @@ export async function generateReportsExcel() {
       formatInTimeZone(
         new Date(d.patient_endedAt),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.age,
 
