@@ -391,10 +391,10 @@ export async function generateReportsExcel() {
   sheet.getRow(4).values = [
     ...Array(27).fill(""),
     "",
+    "Yes",
     "On regular medication",
     "Not on regular medication",
     "No",
-    "Yes",
 
     "Yes",
     "No",
