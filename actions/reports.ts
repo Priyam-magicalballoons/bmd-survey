@@ -8,7 +8,7 @@ import { formatInTimeZone } from "date-fns-tz";
 
 export const getPaginationData = async (
   currentPage: number,
-  pageSize: number,
+  pageSize: number
 ) => {
   type PatientRow = {
     id: string;
@@ -387,75 +387,117 @@ export async function generateReportsExcel() {
     "Yes",
     "No",
   ];
-  // update the excel top heading
-  sheet.getRow(4).values = [
-    ...Array(27).fill(""),
-    "",
-    "Yes",
-    "On regular medication",
-    "Not on regular medication",
-    "No",
+// update the excel top heading 
+  // Row 4: Yes / No headings
+sheet.getRow(4).values = [
+  ...Array(27).fill(""),
+  "",
+  "Yes", "", "", "No",
+  "Yes", "No",
+  "Yes", "No",
+  "Yes", "", "", "No",
+  "Yes", "No",
+  ...Array(14).fill(""),
+];
 
-    "Yes",
-    "No",
+// Row 5: Medication headings
+sheet.getRow(5).values = [
+  ...Array(29).fill(""),
+  "On regular medication",
+  "Not on regular medication",
+  ...Array(6).fill(""),
+  "On regular medication",
+  "Not on regular medication",
+  ...Array(17).fill(""),
+];
 
-    "Yes",
-    "No",
+ const merge = (
+  r1: number,
+  c1: number,
+  r2: number,
+  c2: number
+) => {
+  sheet.mergeCells(r1, c1, r2, c2);
+};
 
-    "Yes",
-    "On regular medication",
-    "Not on regular medication",
-    "No",
+// Fixed columns: rows 2 to 5
+for (let c = 1; c <= 20; c++) {
+  merge(2, c, 5, c);
+}
 
-    "Yes",
-    "No", //added this on 26th november and also changed the array from (15 to 14)
-    ...Array(14).fill(""),
-  ];
+// Gender
+merge(2, 21, 2, 23);
+for (let c = 21; c <= 23; c++) {
+  merge(3, c, 5, c);
+}
 
-  const merge = (r1: number, c1: number, r2: number, c2: number) => {
-    sheet.mergeCells(r1, c1, r2, c2);
-  };
+// BMD T-Score
+merge(2, 24, 5, 24);
 
-  // Fixed columns
-  for (let c = 1; c <= 20; c++) {
-    merge(2, c, 4, c);
-  }
+// Menopause
+merge(2, 25, 2, 26);
+merge(3, 25, 5, 25);
+merge(3, 26, 5, 26);
 
-  // Gender
-  merge(2, 21, 2, 23);
+// Weight and Height
+merge(2, 27, 5, 27);
+merge(2, 28, 5, 28);
 
-  // Menopause
-  merge(2, 25, 2, 26);
+// Existing Medical Conditions
+merge(2, 29, 2, 42);
 
-  // Existing Medical Conditions
-  merge(2, 29, 2, 42);
+// Question headings
+merge(3, 29, 3, 32); // COPD/Asthma
+merge(3, 33, 3, 34); // Knee OA
+merge(3, 35, 3, 36); // Diabetes
+merge(3, 37, 3, 40); // Epilepsy
+merge(3, 41, 3, 42); // Hypertension
 
-  // Question headings
-  merge(3, 29, 3, 32); // COPD/Asthma
-  merge(3, 33, 3, 34); // Knee OA
-  merge(3, 35, 3, 36); // Diabetes
-  merge(3, 37, 3, 40); // Epilepsy
-  merge(3, 41, 3, 42); // Hypertension
+// COPD: Yes spans medication columns
+merge(4, 29, 4, 31);
+merge(4, 32, 5, 32);
 
-  // Diet
-  merge(2, 43, 2, 45);
+// Knee OA
+merge(4, 33, 5, 33);
+merge(4, 34, 5, 34);
 
-  // Smoking
-  merge(2, 46, 2, 47);
+// Diabetes
+merge(4, 35, 5, 35);
+merge(4, 36, 5, 36);
 
-  // Tobacco
-  merge(2, 48, 2, 49);
+// Epilepsy: Yes spans medication columns
+merge(4, 37, 4, 39);
+merge(4, 40, 5, 40);
 
-  // Alcohol
-  merge(2, 50, 2, 51);
+// Hypertension
+merge(4, 41, 5, 41);
+merge(4, 42, 5, 42);
 
-  // Fractures
-  merge(2, 52, 2, 54);
+// Diet
+merge(2, 43, 2, 45);
 
-  // Orthopaedic Surgery
-  merge(2, 55, 2, 56);
+// Smoking
+merge(2, 46, 2, 47);
 
-  for (let r = 2; r <= 4; r++) {
+// Tobacco
+merge(2, 48, 2, 49);
+
+// Alcohol
+merge(2, 50, 2, 51);
+
+// Fractures
+merge(2, 52, 2, 54);
+
+// Orthopaedic Surgery
+merge(2, 55, 2, 56);
+
+// Vertically merge remaining subheadings
+for (let c = 43; c <= 56; c++) {
+  merge(3, c, 5, c);
+}
+
+
+  for (let r = 2; r <= 5; r++) {
     sheet.getRow(r).eachCell((cell) => {
       cell.alignment = {
         horizontal: "center",
@@ -489,7 +531,7 @@ export async function generateReportsExcel() {
       formatInTimeZone(
         new Date(d?.doctor_createdat),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss",
+        "dd-MM-yyyy HH:mm:ss"
       ),
       d.doctor_endedat ?? "ONGOING",
       `${d.camp_id}_${String(d.patient_index).padStart(3, "0")}`,
@@ -501,7 +543,7 @@ export async function generateReportsExcel() {
       formatInTimeZone(
         new Date(d.patient_endedAt),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss",
+        "dd-MM-yyyy HH:mm:ss"
       ),
       d.age,
 
