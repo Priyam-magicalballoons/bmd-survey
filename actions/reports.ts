@@ -8,7 +8,7 @@ import { formatInTimeZone } from "date-fns-tz";
 
 export const getPaginationData = async (
   currentPage: number,
-  pageSize: number
+  pageSize: number,
 ) => {
   type PatientRow = {
     id: string;
@@ -387,115 +387,78 @@ export async function generateReportsExcel() {
     "Yes",
     "No",
   ];
-// update the excel top heading 
-  // Row 4: Yes / No headings
-sheet.getRow(4).values = [
-  ...Array(27).fill(""),
-  "",
-  "Yes", "", "", "No",
-  "Yes", "No",
-  "Yes", "No",
-  "Yes", "", "", "No",
-  "Yes", "No",
-  ...Array(14).fill(""),
-];
+  // update the excel top heading
+  sheet.getRow(4).values = [
+    ...Array(28).fill(""),
+    "Yes",
+    "",
+    "",
+    "No",
+    "Yes",
+    "No",
+    "Yes",
+    "No",
+    "Yes",
+    "",
+    "",
+    "No",
+    "Yes",
+    "No",
+    ...Array(14).fill(""),
+  ];
 
-// Row 5: Medication headings
-sheet.getRow(5).values = [
-  ...Array(29).fill(""),
-  "On regular medication",
-  "Not on regular medication",
-  ...Array(6).fill(""),
-  "On regular medication",
-  "Not on regular medication",
-  ...Array(17).fill(""),
-];
+  sheet.getRow(5).values = [
+    ...Array(29).fill(""),
+    "On regular medication",
+    "Not on regular medication",
+    ...Array(6).fill(""),
+    "On regular medication",
+    "Not on regular medication",
+    ...Array(17).fill(""),
+  ];
 
- const merge = (
-  r1: number,
-  c1: number,
-  r2: number,
-  c2: number
-) => {
-  sheet.mergeCells(r1, c1, r2, c2);
-};
+  const merge = (r1: number, c1: number, r2: number, c2: number) => {
+    sheet.mergeCells(r1, c1, r2, c2);
+  };
 
-// Fixed columns: rows 2 to 5
-for (let c = 1; c <= 20; c++) {
-  merge(2, c, 5, c);
-}
+  // Fixed columns
+  for (let c = 1; c <= 20; c++) {
+    merge(2, c, 4, c);
+  }
 
-// Gender
-merge(2, 21, 2, 23);
-for (let c = 21; c <= 23; c++) {
-  merge(3, c, 5, c);
-}
+  // Gender
+  merge(2, 21, 2, 23);
 
-// BMD T-Score
-merge(2, 24, 5, 24);
+  // Menopause
+  merge(2, 25, 2, 26);
 
-// Menopause
-merge(2, 25, 2, 26);
-merge(3, 25, 5, 25);
-merge(3, 26, 5, 26);
+  // Existing Medical Conditions
+  merge(2, 29, 2, 42);
 
-// Weight and Height
-merge(2, 27, 5, 27);
-merge(2, 28, 5, 28);
+  // Question headings
+  merge(3, 29, 3, 32); // COPD/Asthma
+  merge(3, 33, 3, 34); // Knee OA
+  merge(3, 35, 3, 36); // Diabetes
+  merge(3, 37, 3, 40); // Epilepsy
+  merge(3, 41, 3, 42); // Hypertension
 
-// Existing Medical Conditions
-merge(2, 29, 2, 42);
+  // Diet
+  merge(2, 43, 2, 45);
 
-// Question headings
-merge(3, 29, 3, 32); // COPD/Asthma
-merge(3, 33, 3, 34); // Knee OA
-merge(3, 35, 3, 36); // Diabetes
-merge(3, 37, 3, 40); // Epilepsy
-merge(3, 41, 3, 42); // Hypertension
+  // Smoking
+  merge(2, 46, 2, 47);
 
-// COPD: Yes spans medication columns
-merge(4, 29, 4, 31);
-merge(4, 32, 5, 32);
+  // Tobacco
+  merge(2, 48, 2, 49);
 
-// Knee OA
-merge(4, 33, 5, 33);
-merge(4, 34, 5, 34);
+  // Alcohol
+  merge(2, 50, 2, 51);
 
-// Diabetes
-merge(4, 35, 5, 35);
-merge(4, 36, 5, 36);
+  // Fractures
+  merge(2, 52, 2, 54);
 
-// Epilepsy: Yes spans medication columns
-merge(4, 37, 4, 39);
-merge(4, 40, 5, 40);
-
-// Hypertension
-merge(4, 41, 5, 41);
-merge(4, 42, 5, 42);
-
-// Diet
-merge(2, 43, 2, 45);
-
-// Smoking
-merge(2, 46, 2, 47);
-
-// Tobacco
-merge(2, 48, 2, 49);
-
-// Alcohol
-merge(2, 50, 2, 51);
-
-// Fractures
-merge(2, 52, 2, 54);
-
-// Orthopaedic Surgery
-merge(2, 55, 2, 56);
-
-// Vertically merge remaining subheadings
-for (let c = 43; c <= 56; c++) {
-  merge(3, c, 5, c);
-}
-
+  // Orthopaedic Surgery
+  merge(2, 55, 2, 56);
 
   for (let r = 2; r <= 5; r++) {
     sheet.getRow(r).eachCell((cell) => {
@@ -504,12 +467,20 @@ for (let c = 43; c <= 56; c++) {
         vertical: "middle",
         wrapText: true,
       };
+
       cell.font = { bold: true };
+
       cell.border = {
         top: { style: "thin" },
         bottom: { style: "thin" },
         left: { style: "thin" },
         right: { style: "thin" },
+      };
+
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFFFFF00" },
       };
     });
   }
@@ -531,7 +502,7 @@ for (let c = 43; c <= 56; c++) {
       formatInTimeZone(
         new Date(d?.doctor_createdat),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.doctor_endedat ?? "ONGOING",
       `${d.camp_id}_${String(d.patient_index).padStart(3, "0")}`,
@@ -543,7 +514,7 @@ for (let c = 43; c <= 56; c++) {
       formatInTimeZone(
         new Date(d.patient_endedAt),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.age,
 
@@ -602,3 +573,4 @@ for (let c = 43; c <= 56; c++) {
   const buffer = await workbook.xlsx.writeBuffer();
   return buffer;
 }
+//here only added the row
