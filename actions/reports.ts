@@ -407,38 +407,50 @@ export async function generateReportsExcel() {
     ...Array(15).fill(""),
   ];
 
-  const merge = (r1: any, c1: any, r2: any, c2: any) =>
-    sheet.mergeCells(r1, c1, r2, c2);
+  
+const merge = (r1: number, c1: number, r2: number, c2: number) => {
+  sheet.mergeCells(r1, c1, r2, c2);
+};
 
-  // Fixed columns
-  for (let c = 1; c <= 20; c++) merge(2, c, 4, c);
+// Fixed columns
+for (let c = 1; c <= 20; c++) {
+  merge(2, c, 4, c);
+}
 
-  // Gender
-  merge(2, 21, 2, 23);
+// Gender
+merge(2, 21, 2, 23);
 
-  // Menopause
-  merge(2, 25, 2, 26);
+// Menopause
+merge(2, 25, 2, 26);
 
-  // Existing conditions
-  merge(2, 29, 2, 42);
+// Existing Medical Conditions
+merge(2, 29, 2, 42);
 
-  // Diet
-  merge(2, 43, 2, 45);
+// Question headings
+merge(3, 29, 3, 32); // COPD/Asthma
+merge(3, 33, 3, 34); // Knee OA
+merge(3, 35, 3, 36); // Diabetes
+merge(3, 37, 3, 40); // Epilepsy
+merge(3, 41, 3, 42); // Hypertension
 
-  // Smoking
-  merge(2, 46, 2, 47);
+// Diet
+merge(2, 43, 2, 45);
 
-  // Tobacco
-  merge(2, 48, 2, 49);
+// Smoking
+merge(2, 46, 2, 47);
 
-  // Alcohol
-  merge(2, 50, 2, 51);
+// Tobacco
+merge(2, 48, 2, 49);
 
-  // Fractures
-  merge(2, 52, 2, 54);
+// Alcohol
+merge(2, 50, 2, 51);
 
-  // Orthopaedic
-  merge(2, 55, 2, 56);
+// Fractures
+merge(2, 52, 2, 54);
+
+// Orthopaedic Surgery
+merge(2, 55, 2, 56);
+
 
   for (let r = 2; r <= 4; r++) {
     sheet.getRow(r).eachCell((cell) => {
