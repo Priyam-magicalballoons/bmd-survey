@@ -404,7 +404,11 @@ export async function generateReportsExcel() {
     "No",
     "Yes",
     "No",
-    ...Array(14).fill(""),
+    ...Array(10).fill(""),
+    "Approximate Age when fracture was diagnosed? (in years) ",
+    "",
+    "",
+    "",
   ];
 
   sheet.getRow(5).values = [
