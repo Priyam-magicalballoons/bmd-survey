@@ -8,7 +8,7 @@ import { formatInTimeZone } from "date-fns-tz";
 
 export const getPaginationData = async (
   currentPage: number,
-  pageSize: number
+  pageSize: number,
 ) => {
   type PatientRow = {
     id: string;
@@ -341,10 +341,10 @@ export async function generateReportsExcel() {
     "",
     "Alcohol",
     "",
-    "Fractures",
+    "History of Fractures",
     "",
     "",
-    "Orthopaedic Surgery",
+    "History of any orthopaedic surgeries",
     "",
   ];
 
@@ -362,7 +362,7 @@ export async function generateReportsExcel() {
     "",
     "",
     "",
-    "Knee OA",
+    "Knee Osteoarthritis",
     "",
     "Diabetes",
     "",
@@ -370,7 +370,7 @@ export async function generateReportsExcel() {
     "",
     "",
     "",
-    "Hypertension",
+    "Hypertension/ Heart Disease",
     "",
     "Veg",
     "Vegan",
@@ -387,70 +387,73 @@ export async function generateReportsExcel() {
     "Yes",
     "No",
   ];
-
+  // update the excel top heading
   sheet.getRow(4).values = [
     ...Array(27).fill(""),
-    "Yes",
-    "Reg Med",
-    "Not Reg",
+    "",
+    "On regular medication",
+    "Not on regular medication",
     "No",
     "Yes",
-    "No",
+
     "Yes",
     "No",
-    "Yes",
-    "Reg Med",
-    "Not Reg",
-    "No",
+
     "Yes",
     "No",
-    ...Array(15).fill(""),
+
+    "Yes",
+    "On regular medication",
+    "Not on regular medication",
+    "No",
+
+    "Yes",
+    "No", //added this on 26th november and also changed the array from (15 to 14)
+    ...Array(14).fill(""),
   ];
 
-  
-const merge = (r1: number, c1: number, r2: number, c2: number) => {
-  sheet.mergeCells(r1, c1, r2, c2);
-};
+  const merge = (r1: number, c1: number, r2: number, c2: number) => {
+    sheet.mergeCells(r1, c1, r2, c2);
+  };
 
-// Fixed columns
-for (let c = 1; c <= 20; c++) {
-  merge(2, c, 4, c);
-}
+  // Fixed columns
+  for (let c = 1; c <= 20; c++) {
+    merge(2, c, 4, c);
+  }
 
-// Gender
-merge(2, 21, 2, 23);
+  // Gender
+  merge(2, 21, 2, 23);
 
-// Menopause
-merge(2, 25, 2, 26);
+  // Menopause
+  merge(2, 25, 2, 26);
 
-// Existing Medical Conditions
-merge(2, 29, 2, 42);
+  // Existing Medical Conditions
+  merge(2, 29, 2, 42);
 
-// Question headings
-merge(3, 29, 3, 32); // COPD/Asthma
-merge(3, 33, 3, 34); // Knee OA
-merge(3, 35, 3, 36); // Diabetes
-merge(3, 37, 3, 40); // Epilepsy
-merge(3, 41, 3, 42); // Hypertension
+  // Question headings
+  merge(3, 29, 3, 32); // COPD/Asthma
+  merge(3, 33, 3, 34); // Knee OA
+  merge(3, 35, 3, 36); // Diabetes
+  merge(3, 37, 3, 40); // Epilepsy
+  merge(3, 41, 3, 42); // Hypertension
 
-// Diet
-merge(2, 43, 2, 45);
+  // Diet
+  merge(2, 43, 2, 45);
 
-// Smoking
-merge(2, 46, 2, 47);
+  // Smoking
+  merge(2, 46, 2, 47);
 
-// Tobacco
-merge(2, 48, 2, 49);
+  // Tobacco
+  merge(2, 48, 2, 49);
 
-// Alcohol
-merge(2, 50, 2, 51);
+  // Alcohol
+  merge(2, 50, 2, 51);
 
-// Fractures
-merge(2, 52, 2, 54);
+  // Fractures
+  merge(2, 52, 2, 54);
 
-// Orthopaedic Surgery
-merge(2, 55, 2, 56);
-
+  // Orthopaedic Surgery
+  merge(2, 55, 2, 56);
 
   for (let r = 2; r <= 4; r++) {
     sheet.getRow(r).eachCell((cell) => {
@@ -486,7 +489,7 @@ merge(2, 55, 2, 56);
       formatInTimeZone(
         new Date(d?.doctor_createdat),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.doctor_endedat ?? "ONGOING",
       `${d.camp_id}_${String(d.patient_index).padStart(3, "0")}`,
@@ -498,7 +501,7 @@ merge(2, 55, 2, 56);
       formatInTimeZone(
         new Date(d.patient_endedAt),
         "UTC",
-        "dd-MM-yyyy HH:mm:ss"
+        "dd-MM-yyyy HH:mm:ss",
       ),
       d.age,
 
